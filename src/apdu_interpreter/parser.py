@@ -1,15 +1,43 @@
-import argparse
-import sys
+
 from typing import TextIO, Tuple
 import re
 
 class ApduCommand:
-   def __init__(self) -> None:
-      self._raw = bytearray()
+   def __init__(self, raw : bytearray = bytearray()) -> None:
+      self._raw = raw
       pass
 
    def append_byte(self, byte : int):
       self._raw.append(byte)
+
+   def is_valid_index(self, index : int) -> bool:
+      if(index < 0): return False
+      return index < len(self._raw) -1
+
+   def get_cla(self) -> int | None:
+      if not self.is_valid_index(0): return None
+      return self._raw[0]
+
+   def get_ins(self) -> int | None:
+      if not self.is_valid_index(1): return None
+      return self._raw[1]
+
+   def get_p1(self) -> int | None:
+      if not self.is_valid_index(2): return None
+      return self._raw[2]
+
+   def get_p2(self) -> int | None:
+      if not self.is_valid_index(3): return None
+      return self._raw[3]
+
+   def get_p3(self) -> int | None:
+      if not self.is_valid_index(4): return None
+      return self._raw[4]
+   
+   def get_data(self) -> bytearray | None:
+      if not self.is_valid_index(5): return None
+      return self._raw[5:]
+
 
 
 class ParserException(Exception):
@@ -26,8 +54,9 @@ class ApduCommandParser:
       self._regx_invalid_hexchars = re.compile(r'[^a-f0-9]', re.IGNORECASE)
 
    def get_next_apdu_command(self) -> ApduCommand:
-      line = self._stream.readline(1)
-      whitespace_removed = self._regx_whitespace.sub(line)
+      line = self._stream.readline()
+      # remove whitespace
+      whitespace_removed = self._regx_whitespace.sub("",line)
       if whitespace_removed == "":
          return None
 
@@ -53,17 +82,3 @@ class ApduCommandParser:
       
       return apdu
 
-
-
-
-def main():
-   argparser = argparse.ArgumentParser("apdu-interpreter")
-   argparser.add_argument("--input-file")
-   argparser.add_argument("--output-file")
-   args = argparser.parse_args()
-
-
-
-
-if __name__ == "__main__":
-   main()
