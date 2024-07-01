@@ -3,8 +3,11 @@ from typing import TextIO, Tuple
 import re
 
 class ApduCommand:
-   def __init__(self, raw : bytearray = bytearray()) -> None:
-      self._raw = raw
+   def __init__(self, raw : bytearray = None) -> None:
+      if raw is None:
+         self._raw = bytearray()
+      else:
+         self._raw = raw
       pass
 
    def append_byte(self, byte : int):
@@ -50,11 +53,14 @@ class ApduCommandParser:
    def __init__(self, input_stream:  TextIO) -> None:
       self._cur_line = 1
       self._stream = input_stream
-      self._regx_whitespace = re.compile(r'[\r\t ]')
+      self._regx_whitespace = re.compile(r'[\r\t\n ]')
       self._regx_invalid_hexchars = re.compile(r'[^a-f0-9]', re.IGNORECASE)
 
-   def get_next_apdu_command(self) -> ApduCommand:
+   def get_next_apdu_command(self) -> ApduCommand | None:
       line = self._stream.readline()
+      if line == "":
+         return None
+      
       # remove whitespace
       whitespace_removed = self._regx_whitespace.sub("",line)
       if whitespace_removed == "":
