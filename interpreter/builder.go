@@ -34,23 +34,23 @@ func (ib *InterpreterBuilder) BuildCommandIntp(commandDef *schema.CommandDefinit
 	}
 	intp.InsMatcher = insMatcher
 
-	p1Matcher, err := NewByteMatcher(commandDef.P1, "")
-	if err != nil {
-		return nil, err
-	}
-	intp.ClaMatcher = p1Matcher
+	// p1Matcher, err := NewByteMatcher(commandDef.P1, "")
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// intp.P1Matcher = p1Matcher
 
-	p2Matcher, err := NewByteMatcher(commandDef.P2, "")
-	if err != nil {
-		return nil, err
-	}
-	intp.ClaMatcher = p2Matcher
+	// p2Matcher, err := NewByteMatcher(commandDef.P2, "")
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// intp.P2Matcher = p2Matcher
 
-	p3Matcher, err := NewByteMatcher(commandDef.P3, "")
-	if err != nil {
-		return nil, err
-	}
-	intp.ClaMatcher = p3Matcher
+	// p3Matcher, err := NewByteMatcher(commandDef.P3, "")
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// intp.P3Matcher = p3Matcher
 	return &intp, nil
 }
 

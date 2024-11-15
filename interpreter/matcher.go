@@ -1,6 +1,7 @@
 package interpreter
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -19,7 +20,7 @@ type ByteMatcher struct {
 
 // Interpret implements Matcher.
 func (b *ByteMatcher) Interpret(byteStr string) (string, error) {
-	panic("unimplemented")
+	return b.description, nil
 }
 
 // Matches implements Matcher.
@@ -37,6 +38,9 @@ func NewByteMatcher(pattern string, description string) (Matcher, error) {
 	pattern = strings.TrimSpace(pattern)
 	if pattern == "" {
 		return nil, nil
+	}
+	if len(pattern) != 2 {
+		return nil, errors.New("pattern must be 2 chars long")
 	}
 	matched, _ := regexp.MatchString("[0-9-fA-FxX]+", pattern)
 	if !matched {

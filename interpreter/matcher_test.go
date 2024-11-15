@@ -24,3 +24,15 @@ func TestByteMatcher_Matches_LowNibbleAny_ReturnTrue(t *testing.T) {
 
 	assert.True(t, obj.Matches("05"))
 }
+
+func TestByteMatcher_Matches_DifferentCase_ReturnTrue(t *testing.T) {
+	obj, _ := interpreter.NewByteMatcher("aB", "")
+
+	assert.True(t, obj.Matches("Ab"))
+}
+
+func TestByteMatcher_Matches_NoMatch_ReturnFalse(t *testing.T) {
+	obj, _ := interpreter.NewByteMatcher("aX", "")
+
+	assert.False(t, obj.Matches("bb"))
+}
