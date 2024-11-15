@@ -1,8 +1,5 @@
 package schema
 
-type SchemaBuilder interface {
-}
-
 type CommandDefinition struct {
 	Cla  string
 	Ins  string
