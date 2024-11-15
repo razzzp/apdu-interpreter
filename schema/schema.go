@@ -10,8 +10,9 @@ type CommandDefinition struct {
 	Le   string
 }
 
-type Schema struct {
+type SchemaDefinition struct {
 	Name               string
+	Group              string
 	Description        string
 	Labels             []string
 	CommandDefinitions []CommandDefinition `yaml:"commandDefinitions"`

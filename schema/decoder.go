@@ -7,7 +7,7 @@ import (
 )
 
 type SchemaDecoder interface {
-	Decode() (*Schema, error)
+	Decode() (*SchemaDefinition, error)
 }
 
 func NewYamlSchemaDecoder(reader io.Reader) SchemaDecoder {
@@ -21,10 +21,10 @@ type yamlReader struct {
 	reader io.Reader
 }
 
-func (yr *yamlReader) Decode() (*Schema, error) {
+func (yr *yamlReader) Decode() (*SchemaDefinition, error) {
 	decoder := yaml.NewDecoder(yr.reader)
 
-	result := Schema{}
+	result := SchemaDefinition{}
 	err := decoder.Decode(&result)
 	if err != nil {
 		return nil, err
