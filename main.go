@@ -1,9 +1,11 @@
 package main
 
 import (
-	"apdu-interpreter/interpreter"
-	"apdu-interpreter/schema"
 	"strings"
+
+	"github.com/razzzp/apdu-interpreter/schema"
+
+	"github.com/razzzp/apdu-interpreter/interpreter"
 )
 
 func main() {

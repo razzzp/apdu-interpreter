@@ -1,9 +1,10 @@
 package schema_test
 
 import (
-	"apdu-interpreter/schema"
 	"strings"
 	"testing"
+
+	"github.com/razzzp/apdu-interpreter/schema"
 
 	"github.com/stretchr/testify/assert"
 )

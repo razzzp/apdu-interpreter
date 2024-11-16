@@ -1,9 +1,10 @@
 package interpreter
 
 import (
-	"apdu-interpreter/schema"
-	"apdu-interpreter/utils"
 	"errors"
+
+	"github.com/razzzp/apdu-interpreter/schema"
+	"github.com/razzzp/apdu-interpreter/utils"
 )
 
 type InterpreterBuilder struct {

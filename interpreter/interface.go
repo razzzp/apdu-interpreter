@@ -1,6 +1,6 @@
 package interpreter
 
-import "apdu-interpreter/apdu"
+import "github.com/razzzp/apdu-interpreter/apdu"
 
 type ByteIntp interface {
 	Matches(b byte) bool

@@ -1,5 +1,9 @@
 package interpreter
 
 type ByteInterpretation struct {
-	Intps []string
+	Intps []any
+}
+
+func (bi *ByteInterpretation) Add(intp any) {
+	bi.Intps = append(bi.Intps, intp)
 }
