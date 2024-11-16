@@ -3,13 +3,31 @@ package schema
 type CommandDefinition struct {
 	Name        string
 	Decsription string
-	Cla         string
-	Ins         string
-	P1          string
-	P2          string
-	P3          string
+	Cla         []ByteDefinition
+	Ins         []ByteDefinition
+	P1          []ByteDefinition
+	P2          []ByteDefinition
+	P3          []ByteDefinition
 	Data        string
 	Le          string
+}
+
+type CommonDefition struct {
+	Description string
+}
+
+type ByteDefinition struct {
+	BitPattern  *BitPatternDefinition
+	BytePattern *BytePatternDefinition
+}
+
+type BitPatternDefinition struct {
+	CommonDefition
+	Pattern string
+}
+type BytePatternDefinition struct {
+	CommonDefition
+	Pattern string
 }
 
 type SchemaDefinition struct {

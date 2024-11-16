@@ -3,6 +3,7 @@ package interpreter
 import (
 	"apdu-interpreter/schema"
 	"apdu-interpreter/utils"
+	"errors"
 )
 
 type InterpreterBuilder struct {
@@ -17,41 +18,27 @@ type Schema struct {
 	Labels      []string
 }
 
+func BuildByteIntp(def schema.ByteDefinition) (ByteIntp, error) {
+	if def.BitPattern != nil {
+		return BitPattern(def.BitPattern.Pattern, def.BitPattern.Description)
+	}
+	return nil, errors.New("unknown definition")
+}
+
 func (ib *InterpreterBuilder) BuildCommandIntp(commandDef *schema.CommandDefinition) (*ApduCommandInterpreter, error) {
-	intp := ApduCommandInterpreter{
+	apduIntp := ApduCommandInterpreter{
 		Name:        commandDef.Name,
 		Description: commandDef.Decsription,
 	}
-	claMatcher, err := NewByteMatcher(commandDef.Cla, "")
-	if err != nil {
-		return nil, err
+	for _, def := range commandDef.Cla {
+		intp, err := BuildByteIntp(def)
+		if err != nil {
+			return nil, err
+		}
+		apduIntp.ClaMatcher = append(apduIntp.ClaMatcher, intp)
 	}
-	intp.ClaMatcher = claMatcher
 
-	insMatcher, err := NewByteMatcher(commandDef.Ins, "")
-	if err != nil {
-		return nil, err
-	}
-	intp.InsMatcher = insMatcher
-
-	// p1Matcher, err := NewByteMatcher(commandDef.P1, "")
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// intp.P1Matcher = p1Matcher
-
-	// p2Matcher, err := NewByteMatcher(commandDef.P2, "")
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// intp.P2Matcher = p2Matcher
-
-	// p3Matcher, err := NewByteMatcher(commandDef.P3, "")
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// intp.P3Matcher = p3Matcher
-	return &intp, nil
+	return &apduIntp, nil
 }
 
 func (ib *InterpreterBuilder) Build(schema schema.SchemaDefinition) *InterpreterEngine {

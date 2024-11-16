@@ -18,31 +18,31 @@ func ByteFromHex(hexstr string) byte {
 }
 
 func TestByteMatcher_Matches_ExactMatch_ReturnTrue(t *testing.T) {
-	obj, _ := interpreter.NewByteMatcher("00", "")
+	obj, _ := interpreter.BytePattern("00", "")
 
 	assert.True(t, obj.Matches(ByteFromHex("00")))
 }
 
 func TestByteMatcher_Matches_HighNibbleAny_ReturnTrue(t *testing.T) {
-	obj, _ := interpreter.NewByteMatcher("X0", "")
+	obj, _ := interpreter.BytePattern("X0", "")
 
 	assert.True(t, obj.Matches(ByteFromHex("50")))
 }
 
 func TestByteMatcher_Matches_LowNibbleAny_ReturnTrue(t *testing.T) {
-	obj, _ := interpreter.NewByteMatcher("0X", "")
+	obj, _ := interpreter.BytePattern("0X", "")
 
 	assert.True(t, obj.Matches(ByteFromHex("05")))
 }
 
 func TestByteMatcher_Matches_DifferentCase_ReturnTrue(t *testing.T) {
-	obj, _ := interpreter.NewByteMatcher("aB", "")
+	obj, _ := interpreter.BytePattern("aB", "")
 
 	assert.True(t, obj.Matches(ByteFromHex("Ab")))
 }
 
 func TestByteMatcher_Matches_NoMatch_ReturnFalse(t *testing.T) {
-	obj, _ := interpreter.NewByteMatcher("aX", "")
+	obj, _ := interpreter.BytePattern("aX", "")
 
 	assert.False(t, obj.Matches(ByteFromHex("bb")))
 }

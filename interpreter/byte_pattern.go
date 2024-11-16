@@ -41,7 +41,7 @@ func (bp *BytePatternMatcher) Matches(b byte) bool {
 	return true
 }
 
-func NewByteMatcher(pattern string, description string) (ByteIntp, error) {
+func BytePattern(pattern string, description string) (ByteIntp, error) {
 	pattern = strings.TrimSpace(pattern)
 	if pattern == "" {
 		return nil, nil
