@@ -22,7 +22,7 @@ func (bb *BytePerBitIntp) Matches(bytes string) bool {
 	return false
 }
 
-func (bb *BytePerBitIntp) Interpret(bytes string) (string, error) {
+func (bb *BytePerBitIntp) Interpret(bytes string) ([]any, error) {
 	panic("not implemented") // TODO: Implement
 }
 
@@ -38,6 +38,6 @@ func (bi *BitIntp) Matches(bytes string) bool {
 	return false
 }
 
-func (bi *BitIntp) Interpret(bytes string) (map[string]any, error) {
+func (bi *BitIntp) Interpret(bytes string) ([]any, error) {
 	panic("not implemented") // TODO: Implement
 }

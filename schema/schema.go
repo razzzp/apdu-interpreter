@@ -15,6 +15,7 @@ type CommandDefinition struct {
 type SchemaDefinition struct {
 	Name               string
 	Group              string
+	Version            string
 	Description        string
 	Labels             []string
 	CommandDefinitions []CommandDefinition `yaml:"commandDefinitions"`
