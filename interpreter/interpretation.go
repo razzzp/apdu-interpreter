@@ -1,5 +1,5 @@
 package interpreter
 
-type ByteInter struct {
+type ByteInterpretation struct {
 	Intps []string
 }
