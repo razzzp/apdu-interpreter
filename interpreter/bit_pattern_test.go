@@ -77,5 +77,23 @@ func TestInterpret_8BitMatch_AddInterpretation(t *testing.T) {
 
 	bitIntp.Interpret(byteI, ByteFromHex("CD"))
 
-	byteI.AssertNotCalled(t, "Add", "0bxxxxxxx0: exactly")
+	byteI.AssertCalled(t, "Add", "0b11001101: exactly")
+}
+
+func TestBitDef_Bit0_BuildsBitPatternIntp(t *testing.T) {
+	bitIntp, err := interpreter.BitDef(1, false, "bit 1")
+
+	assert.Nil(t, err)
+	assert.Equal(t, byte(1), bitIntp.Mask)
+	assert.Equal(t, byte(1), bitIntp.ExpectedValue)
+	assert.Equal(t, "bit 1", bitIntp.Description)
+}
+
+func TestBitDef_Bit8ZeroOn_BuildsBitPatternIntp(t *testing.T) {
+	bitIntp, err := interpreter.BitDef(8, true, "bit 8")
+
+	assert.Nil(t, err)
+	assert.Equal(t, byte(128), bitIntp.Mask)
+	assert.Equal(t, byte(0), bitIntp.ExpectedValue)
+	assert.Equal(t, "bit 8", bitIntp.Description)
 }
