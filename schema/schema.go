@@ -17,17 +17,24 @@ type CommonDefition struct {
 }
 
 type ByteDefinition struct {
-	BitPattern  *BitPatternDefinition
-	BytePattern *BytePatternDefinition
+	BitPattern          *BitPatternDefinition
+	BytePattern         *BytePatternDefinition
+	SingleBitDefinition *SingleBitDefinition
+}
+
+type SingleBitDefinition struct {
+	Description string
+	BitNumber   int
+	ZeroIsOn    bool
 }
 
 type BitPatternDefinition struct {
-	CommonDefition
-	Pattern string
+	Description string
+	Pattern     string
 }
 type BytePatternDefinition struct {
-	CommonDefition
-	Pattern string
+	Description string
+	Pattern     string
 }
 
 type SchemaDefinition struct {

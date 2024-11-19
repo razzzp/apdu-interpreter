@@ -46,7 +46,7 @@ func PadStringLeft(s string, c rune, length int) string {
 //
 //	bitNum is a 1-based bit index
 //	oneIsOn determines whether it will match a 1 or 0 at bitNum
-func BitDef(bitNum int, zeroIsOn bool, desc string) (*BitPatternIntp, error) {
+func SingleBitDefinition(bitNum int, zeroIsOn bool, desc string) (*BitPatternIntp, error) {
 	if bitNum < 1 || bitNum > 8 {
 		return nil, fmt.Errorf("bit number must be between 0 and 7, got: %d", bitNum)
 	}

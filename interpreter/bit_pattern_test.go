@@ -81,7 +81,7 @@ func TestInterpret_8BitMatch_AddInterpretation(t *testing.T) {
 }
 
 func TestBitDef_Bit0_BuildsBitPatternIntp(t *testing.T) {
-	bitIntp, err := interpreter.BitDef(1, false, "bit 1")
+	bitIntp, err := interpreter.SingleBitDefinition(1, false, "bit 1")
 
 	assert.Nil(t, err)
 	assert.Equal(t, byte(1), bitIntp.Mask)
@@ -90,7 +90,7 @@ func TestBitDef_Bit0_BuildsBitPatternIntp(t *testing.T) {
 }
 
 func TestBitDef_Bit8ZeroOn_BuildsBitPatternIntp(t *testing.T) {
-	bitIntp, err := interpreter.BitDef(8, true, "bit 8")
+	bitIntp, err := interpreter.SingleBitDefinition(8, true, "bit 8")
 
 	assert.Nil(t, err)
 	assert.Equal(t, byte(128), bitIntp.Mask)
