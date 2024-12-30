@@ -19,7 +19,7 @@ type Schema struct {
 	Labels      []string
 }
 
-func BuildByteIntp(def schema.ByteDefinition) (ByteIntp, error) {
+func BuildByteInterpreter(def schema.ByteDefinition) (ByteInterpreter, error) {
 	if def.SingleBitDefinition != nil {
 		return SingleBitDefinition(def.SingleBitDefinition.BitNumber, def.SingleBitDefinition.ZeroIsOn, def.SingleBitDefinition.Description)
 	}
@@ -34,10 +34,10 @@ func BuildByteIntp(def schema.ByteDefinition) (ByteIntp, error) {
 
 func buildByteIntpsToList(
 	defs []schema.ByteDefinition,
-	list *[]ByteIntp,
+	list *[]ByteInterpreter,
 ) error {
 	for _, def := range defs {
-		intp, err := BuildByteIntp(def)
+		intp, err := BuildByteInterpreter(def)
 		if err != nil {
 			return err
 		}
@@ -47,10 +47,10 @@ func buildByteIntpsToList(
 	return nil
 }
 
-func (ib *InterpreterBuilder) BuildCommandIntp(commandDef *schema.CommandDefinition) (*ApduCommandInterpreter, error) {
+func (ib *InterpreterBuilder) BuildCommandInterpreter(commandDef *schema.CommandDefinition) (*ApduCommandInterpreter, error) {
 	apduIntp := ApduCommandInterpreter{
 		Name:        commandDef.Name,
-		Description: commandDef.Decsription,
+		Description: commandDef.Description,
 	}
 	err := buildByteIntpsToList(commandDef.Cla, &apduIntp.ClaMatcher)
 	if err != nil {
@@ -86,7 +86,7 @@ func (ib *InterpreterBuilder) Build(schema schema.SchemaDefinition) *Interpreter
 		},
 	}
 	for _, commandDef := range schema.CommandDefinitions {
-		commandIntp, err := ib.BuildCommandIntp(&commandDef)
+		commandIntp, err := ib.BuildCommandInterpreter(&commandDef)
 		if err != nil {
 			ib.eCollector.AppendError(err.Error())
 			continue

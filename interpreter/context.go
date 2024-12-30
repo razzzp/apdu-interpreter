@@ -1,4 +1,4 @@
 package interpreter
 
-type IntpContext struct {
+type InterpreterContext struct {
 }

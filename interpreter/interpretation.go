@@ -1,5 +1,7 @@
 package interpreter
 
+import "github.com/razzzp/apdu-interpreter/apdu"
+
 type ByteInterpretation struct {
 	Intps []any
 }
@@ -9,10 +11,11 @@ func (bi *ByteInterpretation) Add(intp any) {
 }
 
 type CommandInterpretation struct {
-	Command string
-	ClaIntp ByteIntp
-	InsIntp ByteIntp
-	P1Intp  ByteIntp
-	P2Intp  ByteIntp
-	P3Intp  ByteIntp
+	Command     *apdu.ApduCommand
+	Interpreter *ApduCommandInterpreter
+	ClaIntp     *ByteInterpretation
+	InsIntp     *ByteInterpretation
+	P1Intp      *ByteInterpretation
+	P2Intp      *ByteInterpretation
+	P3Intp      *ByteInterpretation
 }

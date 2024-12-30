@@ -2,7 +2,7 @@ package schema
 
 type CommandDefinition struct {
 	Name        string
-	Decsription string
+	Description string
 	Cla         []ByteDefinition
 	Ins         []ByteDefinition
 	P1          []ByteDefinition

@@ -12,7 +12,7 @@ func TestInterpreterBuilder_BuildCommandIntp_Cla_NotNil(t *testing.T) {
 	builder := interpreter.InterpreterBuilder{}
 	inputDef := schema.CommandDefinition{
 		Name:        "Cmd",
-		Decsription: "Test",
+		Description: "Test",
 		Cla: []schema.ByteDefinition{
 			{
 				BitPattern: &schema.BitPatternDefinition{
@@ -22,14 +22,14 @@ func TestInterpreterBuilder_BuildCommandIntp_Cla_NotNil(t *testing.T) {
 			},
 		},
 	}
-	expectedIntp := interpreter.BitPatternIntp{
+	expectedIntp := interpreter.BitPatternInterpreter{
 		ExpectedValue: 1,
 		Mask:          ByteFromHex("FF"),
 		Pattern:       "00000001",
 		Description:   "Equals 1",
 	}
 
-	intp, err := builder.BuildCommandIntp(&inputDef)
+	intp, err := builder.BuildCommandInterpreter(&inputDef)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, intp.ClaMatcher)

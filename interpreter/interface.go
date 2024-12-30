@@ -6,12 +6,12 @@ type Interpretation interface {
 	Add(intp any)
 }
 
-type ByteIntp interface {
+type ByteInterpreter interface {
 	Matches(b byte) bool
 	Interpret(i Interpretation, b byte) error
 }
 
-type Interpreter interface {
+type ApduInterpreter interface {
 	Matches(apdu *apdu.ApduCommand) bool
 	Interpret(apdu *apdu.ApduCommand) (Interpretation, error)
 }

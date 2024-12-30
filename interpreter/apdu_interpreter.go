@@ -5,13 +5,13 @@ import "github.com/razzzp/apdu-interpreter/apdu"
 type ApduCommandInterpreter struct {
 	Name            string
 	Description     string
-	ClaMatcher      []ByteIntp
-	InsMatcher      []ByteIntp
-	P1Matcher       []ByteIntp
-	P2Matcher       []ByteIntp
-	P3Matcher       []ByteIntp
+	ClaMatcher      []ByteInterpreter
+	InsMatcher      []ByteInterpreter
+	P1Matcher       []ByteInterpreter
+	P2Matcher       []ByteInterpreter
+	P3Matcher       []ByteInterpreter
 	DataInterpreter any
-	LeMatcher       ByteIntp
+	LeMatcher       ByteInterpreter
 }
 
 func (aci *ApduCommandInterpreter) MatchesCla(apdu apdu.ApduCommand) bool {

@@ -4,29 +4,7 @@ import (
 	"fmt"
 )
 
-func NewBytePerBitIntp() *BytePerBitIntp {
-	return &BytePerBitIntp{}
-}
-
-type BytePerBitIntp struct {
-	BitDefs []BitPatternIntp
-}
-
-func (bb *BytePerBitIntp) Matches(b byte) bool {
-	// matches if any bit matches
-	for _, intp := range bb.BitDefs {
-		if intp.Matches(b) {
-			return true
-		}
-	}
-	return false
-}
-
-func (bb *BytePerBitIntp) Interpret(i Interpretation, b byte) ([]any, error) {
-	panic("not implemented") // TODO: Implement
-}
-
-type BitPatternIntp struct {
+type BitPatternInterpreter struct {
 	ExpectedValue byte
 	Mask          byte
 	Pattern       string
@@ -46,7 +24,7 @@ func PadStringLeft(s string, c rune, length int) string {
 //
 //	bitNum is a 1-based bit index
 //	oneIsOn determines whether it will match a 1 or 0 at bitNum
-func SingleBitDefinition(bitNum int, zeroIsOn bool, desc string) (*BitPatternIntp, error) {
+func SingleBitDefinition(bitNum int, zeroIsOn bool, desc string) (*BitPatternInterpreter, error) {
 	if bitNum < 1 || bitNum > 8 {
 		return nil, fmt.Errorf("bit number must be between 0 and 7, got: %d", bitNum)
 	}
@@ -62,7 +40,7 @@ func SingleBitDefinition(bitNum int, zeroIsOn bool, desc string) (*BitPatternInt
 // Pattern in the from of '0011xx'
 // 'x's are don't cares
 // if < 8 bits pads on left with 'x's
-func BitPattern(pattern string, desc string) (*BitPatternIntp, error) {
+func BitPattern(pattern string, desc string) (*BitPatternInterpreter, error) {
 	// pad left to 8 bytes with don't cares
 
 	pattern = PadStringLeft(pattern, 'x', 8)
@@ -80,7 +58,7 @@ func BitPattern(pattern string, desc string) (*BitPatternIntp, error) {
 			return nil, fmt.Errorf("failed to build bit pattern, invalid char %c", c)
 		}
 	}
-	return &BitPatternIntp{
+	return &BitPatternInterpreter{
 		ExpectedValue: byte(expVal),
 		Mask:          byte(mask),
 		Description:   desc,
@@ -88,11 +66,11 @@ func BitPattern(pattern string, desc string) (*BitPatternIntp, error) {
 	}, nil
 }
 
-func (bp *BitPatternIntp) Matches(b byte) bool {
+func (bp *BitPatternInterpreter) Matches(b byte) bool {
 	return b&bp.Mask == bp.ExpectedValue
 }
 
-func (bp *BitPatternIntp) Interpret(i Interpretation, b byte) error {
+func (bp *BitPatternInterpreter) Interpret(i Interpretation, b byte) error {
 	if bp.Matches(b) {
 		i.Add(fmt.Sprintf("0b%s: %s", bp.Pattern, bp.Description))
 	}
