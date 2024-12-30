@@ -10,31 +10,31 @@ import (
 )
 
 type BytePatternMatcher struct {
-	highMask    *byte
-	lowMask     *byte
-	pattern     string
-	description string
+	HighMask    *byte
+	LowMask     *byte
+	Pattern     string
+	Description string
 }
 
 // Interpret implements Matcher.
 func (bp *BytePatternMatcher) Interpret(i Interpretation, b byte) error {
-	i.Add(bp.description)
+	i.Add(bp.Description)
 	return nil
 }
 
 // Matches implements Matcher.
 func (bp *BytePatternMatcher) Matches(b byte) bool {
 	// check high nibble
-	if bp.highMask != nil {
+	if bp.HighMask != nil {
 		// 240 = 0b1111_0000
-		if b&240 != *bp.highMask {
+		if b&240 != *bp.HighMask {
 			return false
 		}
 	}
 	// check high nibble
-	if bp.lowMask != nil {
+	if bp.LowMask != nil {
 		// 15 = 0b0000_1111
-		if b&15 != *bp.lowMask {
+		if b&15 != *bp.LowMask {
 			return false
 		}
 	}
@@ -56,8 +56,8 @@ func BytePattern(pattern string, description string) (ByteInterpreter, error) {
 	}
 
 	bm := &BytePatternMatcher{
-		pattern:     pattern,
-		description: description,
+		Pattern:     pattern,
+		Description: description,
 	}
 
 	// convert high nibble to mask
@@ -65,7 +65,7 @@ func BytePattern(pattern string, description string) (ByteInterpreter, error) {
 		// if not x should be valid
 		high, _ := hex.DecodeString(string(pattern[0]) + "0")
 		mask := high[0]
-		bm.highMask = &mask
+		bm.HighMask = &mask
 	}
 
 	// convert high nibble to mask
@@ -73,8 +73,19 @@ func BytePattern(pattern string, description string) (ByteInterpreter, error) {
 		// if not x should be valid
 		low, _ := hex.DecodeString("0" + string(pattern[1]))
 		mask := low[0]
-		bm.lowMask = &mask
+		bm.LowMask = &mask
 	}
 
 	return bm, nil
+}
+
+func BytePatterns(patterns []string, description string) (result []ByteInterpreter, err error) {
+	for _, pattern := range patterns {
+		byteIntp, err := BytePattern(pattern, description)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, byteIntp)
+	}
+	return result, nil
 }

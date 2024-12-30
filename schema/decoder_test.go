@@ -21,7 +21,7 @@ commandDefinitions:
   - name: Cmd
     description: Test
     cla:
-      - bitpattern:
+      - bitPattern:
           description: Equals 1
           pattern: "00000001"
 `
@@ -30,9 +30,11 @@ commandDefinitions:
 
 	//act
 	schema, err := decoder.Decode()
+	if err != nil {
+		t.Error(err)
+	}
 
 	//assert
-	assert.Nil(t, err)
 	assert.Equal(t, "Test", schema.Name)
 	assert.Equal(t, "Test Description", schema.Description)
 	assert.Equal(t, "Test Group", schema.Group)

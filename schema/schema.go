@@ -17,9 +17,9 @@ type CommonDefition struct {
 }
 
 type ByteDefinition struct {
-	BitPattern          *BitPatternDefinition
-	BytePattern         *BytePatternDefinition
-	SingleBitDefinition *SingleBitDefinition
+	BitPattern          *BitPatternDefinition   `yaml:"bitPattern"`
+	BytePatterns        *BytePatternsDefinition `yaml:"bytePatterns"`
+	SingleBitDefinition *SingleBitDefinition    `yaml:"singleBit"`
 }
 
 type SingleBitDefinition struct {
@@ -32,9 +32,9 @@ type BitPatternDefinition struct {
 	Description string
 	Pattern     string
 }
-type BytePatternDefinition struct {
+type BytePatternsDefinition struct {
 	Description string
-	Pattern     string
+	Patterns    []string
 }
 
 type SchemaDefinition struct {

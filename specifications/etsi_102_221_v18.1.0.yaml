@@ -1,2 +1,14 @@
 name: TS 102 221 V18.2.0
 group: ETSI
+labels:
+  - Common
+version: V18.2.0
+commandDefinitions:
+  - name: SELECT FILE
+    cla:
+      - bytepatterns:
+          pattern:
+            - "0X"
+            - "4X"
+            - "6X"
+    

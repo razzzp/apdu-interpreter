@@ -1,8 +1,6 @@
 package interpreter
 
 import (
-	"errors"
-
 	"github.com/razzzp/apdu-interpreter/schema"
 	"github.com/razzzp/apdu-interpreter/utils"
 )
@@ -19,17 +17,29 @@ type Schema struct {
 	Labels      []string
 }
 
-func BuildByteInterpreter(def schema.ByteDefinition) (ByteInterpreter, error) {
+func appendByteInterpreter(def schema.ByteDefinition, interpreters []ByteInterpreter) ([]ByteInterpreter, error) {
 	if def.SingleBitDefinition != nil {
-		return SingleBitDefinition(def.SingleBitDefinition.BitNumber, def.SingleBitDefinition.ZeroIsOn, def.SingleBitDefinition.Description)
+		intp, err := SingleBitDefinition(def.SingleBitDefinition.BitNumber, def.SingleBitDefinition.ZeroIsOn, def.SingleBitDefinition.Description)
+		if err != nil {
+			return nil, err
+		}
+		return append(interpreters, intp), nil
 	}
 	if def.BitPattern != nil {
-		return BitPattern(def.BitPattern.Pattern, def.BitPattern.Description)
+		intp, err := BitPattern(def.BitPattern.Pattern, def.BitPattern.Description)
+		if err != nil {
+			return nil, err
+		}
+		return append(interpreters, intp), nil
 	}
-	if def.BytePattern != nil {
-		return BytePattern(def.BytePattern.Pattern, def.BytePattern.Description)
+	if def.BytePatterns != nil {
+		intps, err := BytePatterns(def.BytePatterns.Patterns, def.BytePatterns.Description)
+		if err != nil {
+			return nil, err
+		}
+		return append(interpreters, intps...), nil
 	}
-	return nil, errors.New("unknown definition")
+	return interpreters, nil
 }
 
 func buildByteIntpsToList(
@@ -37,11 +47,10 @@ func buildByteIntpsToList(
 	list *[]ByteInterpreter,
 ) error {
 	for _, def := range defs {
-		intp, err := BuildByteInterpreter(def)
+		newList, err := appendByteInterpreter(def, *list)
 		if err != nil {
 			return err
 		}
-		newList := append(*list, intp)
 		*list = newList
 	}
 	return nil
