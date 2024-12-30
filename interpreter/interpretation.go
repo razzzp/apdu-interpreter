@@ -8,7 +8,7 @@ func (bi *ByteInterpretation) Add(intp any) {
 	bi.Intps = append(bi.Intps, intp)
 }
 
-type CommandInterprtation struct {
+type CommandInterpretation struct {
 	Command string
 	ClaIntp ByteIntp
 	InsIntp ByteIntp
