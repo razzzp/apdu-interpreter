@@ -9,3 +9,14 @@ type ApduCommand struct {
 	Data []byte
 	Le   *byte
 }
+
+type ApduResponse struct {
+	Data []byte
+	SW1  byte
+	SW2  byte
+}
+
+type ApduCommandResponse struct {
+	Command  *ApduCommand
+	Response *ApduResponse
+}

@@ -94,8 +94,8 @@ func (ib *InterpreterBuilder) Build(schema schema.SchemaDefinition) *Interpreter
 			Labels:      schema.Labels,
 		},
 	}
-	for _, commandDef := range schema.CommandDefinitions {
-		commandIntp, err := ib.BuildCommandInterpreter(&commandDef)
+	for _, specDef := range schema.Spec {
+		commandIntp, err := ib.BuildCommandInterpreter(&specDef.Command)
 		if err != nil {
 			ib.eCollector.AppendError(err.Error())
 			continue

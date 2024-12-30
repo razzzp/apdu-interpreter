@@ -18,15 +18,17 @@ func TestYamlEncoder_Encode(t *testing.T) {
 			"Label1",
 			"Label2",
 		},
-		CommandDefinitions: []schema.CommandDefinition{
-			schema.CommandDefinition{
-				Name:        "Cmd",
-				Description: "Test",
-				Cla: []schema.ByteDefinition{
-					{
-						BitPattern: &schema.BitPatternDefinition{
-							Description: "Equals 1",
-							Pattern:     "00000001",
+		Spec: []schema.CommandResponseDefinition{
+			schema.CommandResponseDefinition{
+				Command: schema.CommandDefinition{
+					Name:        "Cmd",
+					Description: "Test",
+					Cla: []schema.ByteDefinition{
+						{
+							BitPattern: &schema.BitPatternDefinition{
+								Description: "Equals 1",
+								Pattern:     "00000001",
+							},
 						},
 					},
 				},

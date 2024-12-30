@@ -12,8 +12,17 @@ type CommandDefinition struct {
 	Le          string
 }
 
-type CommonDefition struct {
-	Description string
+type ResponseDefinition struct {
+	// TODO
+	Data any
+	SW1  any
+	SW2  any
+}
+
+type CommandResponseDefinition struct {
+	// TODO
+	Command  CommandDefinition
+	Response *ResponseDefinition
 }
 
 type ByteDefinition struct {
@@ -38,10 +47,10 @@ type BytePatternsDefinition struct {
 }
 
 type SchemaDefinition struct {
-	Name               string
-	Group              string
-	Version            string
-	Description        string
-	Labels             []string
-	CommandDefinitions []CommandDefinition `yaml:"commandDefinitions"`
+	Name        string
+	Group       string
+	Version     string
+	Description string
+	Labels      []string
+	Spec        []CommandResponseDefinition
 }
