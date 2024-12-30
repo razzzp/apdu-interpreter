@@ -20,9 +20,9 @@ func TestYamlEncoder_Encode(t *testing.T) {
 		},
 		Spec: []schema.CommandResponseDefinition{
 			schema.CommandResponseDefinition{
+				Name:        "Cmd",
+				Description: "Test",
 				Command: schema.CommandDefinition{
-					Name:        "Cmd",
-					Description: "Test",
 					Cla: []schema.ByteDefinition{
 						{
 							BitPattern: &schema.BitPatternDefinition{

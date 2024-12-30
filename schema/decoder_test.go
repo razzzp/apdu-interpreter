@@ -18,13 +18,13 @@ labels:
   - Label1
   - Label2
 spec:
-  - command:
-      name: Cmd
-      description: Test
-      cla:
-        - bitPattern:
-            description: Equals 1
-            pattern: "00000001"
+  - name: Cmd
+    description: Test 
+    command:  
+     cla:
+       - bitPattern:
+           description: Equals 1
+           pattern: "00000001"
 `
 	reader := strings.NewReader(input)
 	decoder := schema.NewYamlSchemaDecoder(reader)
@@ -32,7 +32,7 @@ spec:
 	//act
 	schema, err := decoder.Decode()
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	//assert
@@ -41,8 +41,8 @@ spec:
 	assert.Equal(t, "Test Group", schema.Group)
 	assert.Len(t, schema.Labels, 2)
 	assert.Len(t, schema.Spec, 1)
-	assert.Equal(t, "Cmd", schema.Spec[0].Command.Name)
-	assert.Equal(t, "Test", schema.Spec[0].Command.Description)
+	assert.Equal(t, "Cmd", schema.Spec[0].Name)
+	assert.Equal(t, "Test", schema.Spec[0].Description)
 	assert.Len(t, schema.Spec[0].Command.Cla, 1)
 	assert.Equal(t, "Equals 1", schema.Spec[0].Command.Cla[0].BitPattern.Description)
 	assert.Equal(t, "00000001", schema.Spec[0].Command.Cla[0].BitPattern.Pattern)

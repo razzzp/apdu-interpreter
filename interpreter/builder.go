@@ -56,28 +56,25 @@ func buildByteIntpsToList(
 	return nil
 }
 
-func (ib *InterpreterBuilder) BuildCommandInterpreter(commandDef *schema.CommandDefinition) (*ApduCommandInterpreter, error) {
-	apduIntp := ApduCommandInterpreter{
-		Name:        commandDef.Name,
-		Description: commandDef.Description,
-	}
-	err := buildByteIntpsToList(commandDef.Cla, &apduIntp.ClaMatcher)
+func (ib *InterpreterBuilder) BuildCommandInterpreter(def *schema.CommandDefinition) (*apduCommandInterpreter, error) {
+	apduIntp := apduCommandInterpreter{}
+	err := buildByteIntpsToList(def.Cla, &apduIntp.ClaMatcher)
 	if err != nil {
 		return nil, err
 	}
-	err = buildByteIntpsToList(commandDef.Ins, &apduIntp.InsMatcher)
+	err = buildByteIntpsToList(def.Ins, &apduIntp.InsMatcher)
 	if err != nil {
 		return nil, err
 	}
-	err = buildByteIntpsToList(commandDef.P1, &apduIntp.P1Matcher)
+	err = buildByteIntpsToList(def.P1, &apduIntp.P1Matcher)
 	if err != nil {
 		return nil, err
 	}
-	err = buildByteIntpsToList(commandDef.P2, &apduIntp.P2Matcher)
+	err = buildByteIntpsToList(def.P2, &apduIntp.P2Matcher)
 	if err != nil {
 		return nil, err
 	}
-	err = buildByteIntpsToList(commandDef.P3, &apduIntp.P3Matcher)
+	err = buildByteIntpsToList(def.P3, &apduIntp.P3Matcher)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +97,10 @@ func (ib *InterpreterBuilder) Build(schema schema.SchemaDefinition) *Interpreter
 			ib.eCollector.AppendError(err.Error())
 			continue
 		}
-		ib.result.CommandInterpreters = append(ib.result.CommandInterpreters, *commandIntp)
+		apduIntp := ApduInterpreter{
+			CommandInterpreter: commandIntp,
+		}
+		ib.result.ApduInterpreters = append(ib.result.ApduInterpreters, &apduIntp)
 
 	}
 	return ib.result

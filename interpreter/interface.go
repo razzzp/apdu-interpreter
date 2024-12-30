@@ -11,7 +11,11 @@ type ByteInterpreter interface {
 	Interpret(i Interpretation, b byte) error
 }
 
-type ApduInterpreter interface {
+type ApduCommandInterpreter interface {
 	Matches(apdu *apdu.ApduCommand) bool
 	Interpret(apdu *apdu.ApduCommand) (Interpretation, error)
+}
+
+type ApduReponseInterpreter interface {
+	//TODO
 }

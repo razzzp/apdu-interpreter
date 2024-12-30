@@ -11,8 +11,6 @@ import (
 func TestInterpreterBuilder_BuildCommandIntp_Cla_NotNil(t *testing.T) {
 	builder := interpreter.InterpreterBuilder{}
 	inputDef := schema.CommandDefinition{
-		Name:        "Cmd",
-		Description: "Test",
 		Cla: []schema.ByteDefinition{
 			{
 				BitPattern: &schema.BitPatternDefinition{
@@ -40,8 +38,6 @@ func TestInterpreterBuilder_BuildCommandIntp_Cla_NotNil(t *testing.T) {
 func TestInterpreterBuilder_BytePatterns(t *testing.T) {
 	builder := interpreter.InterpreterBuilder{}
 	inputDef := schema.CommandDefinition{
-		Name:        "Cmd",
-		Description: "Test",
 		Cla: []schema.ByteDefinition{
 			{
 				BytePatterns: &schema.BytePatternsDefinition{

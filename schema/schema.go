@@ -1,15 +1,13 @@
 package schema
 
 type CommandDefinition struct {
-	Name        string
-	Description string
-	Cla         []ByteDefinition
-	Ins         []ByteDefinition
-	P1          []ByteDefinition
-	P2          []ByteDefinition
-	P3          []ByteDefinition
-	Data        string
-	Le          string
+	Cla  []ByteDefinition
+	Ins  []ByteDefinition
+	P1   []ByteDefinition
+	P2   []ByteDefinition
+	P3   []ByteDefinition
+	Data string
+	Le   string
 }
 
 type ResponseDefinition struct {
@@ -20,9 +18,10 @@ type ResponseDefinition struct {
 }
 
 type CommandResponseDefinition struct {
-	// TODO
-	Command  CommandDefinition
-	Response *ResponseDefinition
+	Name        string
+	Description string
+	Command     CommandDefinition
+	Response    *ResponseDefinition
 }
 
 type ByteDefinition struct {

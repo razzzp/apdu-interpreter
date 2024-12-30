@@ -2,9 +2,12 @@ package interpreter
 
 import "github.com/razzzp/apdu-interpreter/apdu"
 
-type ApduCommandInterpreter struct {
-	Name            string
-	Description     string
+type ApduInterpreter struct {
+	CommandInterpreter  ApduCommandInterpreter
+	ResponseInterpreter ApduReponseInterpreter
+}
+
+type apduCommandInterpreter struct {
 	ClaMatcher      []ByteInterpreter
 	InsMatcher      []ByteInterpreter
 	P1Matcher       []ByteInterpreter
@@ -14,7 +17,7 @@ type ApduCommandInterpreter struct {
 	LeMatcher       ByteInterpreter
 }
 
-func (aci *ApduCommandInterpreter) MatchesCla(apdu apdu.ApduCommand) bool {
+func (aci *apduCommandInterpreter) MatchesCla(apdu apdu.ApduCommand) bool {
 	for _, matcher := range aci.ClaMatcher {
 		if matcher.Matches(apdu.Cla) {
 			return true
@@ -22,7 +25,7 @@ func (aci *ApduCommandInterpreter) MatchesCla(apdu apdu.ApduCommand) bool {
 	}
 	return false
 }
-func (aci *ApduCommandInterpreter) MatchesIns(apdu apdu.ApduCommand) bool {
+func (aci *apduCommandInterpreter) MatchesIns(apdu apdu.ApduCommand) bool {
 	for _, matcher := range aci.InsMatcher {
 		if matcher.Matches(apdu.Ins) {
 			return true
@@ -30,7 +33,10 @@ func (aci *ApduCommandInterpreter) MatchesIns(apdu apdu.ApduCommand) bool {
 	}
 	return false
 }
+func (aci *apduCommandInterpreter) Matches(apdu *apdu.ApduCommand) bool {
+	panic("not implemented") // TODO: Implement
+}
 
-func (aci *ApduCommandInterpreter) Interpret(apdu apdu.ApduCommand) (Interpretation, error) {
+func (aci *apduCommandInterpreter) Interpret(apdu *apdu.ApduCommand) (Interpretation, error) {
 	panic("not implemented") // TODO: Implement
 }
