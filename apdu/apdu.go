@@ -7,7 +7,7 @@ type ApduCommand struct {
 	P2   byte
 	P3   byte
 	Data []byte
-	Le   *byte
+	Le   byte
 }
 
 type ApduResponse struct {

@@ -70,7 +70,7 @@ func (bp *BitPatternInterpreter) Matches(b byte) bool {
 	return b&bp.Mask == bp.ExpectedValue
 }
 
-func (bp *BitPatternInterpreter) Interpret(i Interpretation, b byte) error {
+func (bp *BitPatternInterpreter) Interpret(i Interpretations, b byte) error {
 	if bp.Matches(b) {
 		i.Add(fmt.Sprintf("0b%s: %s", bp.Pattern, bp.Description))
 	}

@@ -9,7 +9,7 @@ import (
 )
 
 func TestInterpreterBuilder_BuildCommandIntp_Cla_NotNil(t *testing.T) {
-	builder := interpreter.InterpreterBuilder{}
+	builder := interpreter.InterpreterEngineBuilder{}
 	inputDef := schema.CommandDefinition{
 		Cla: []schema.ByteDefinition{
 			{
@@ -36,7 +36,7 @@ func TestInterpreterBuilder_BuildCommandIntp_Cla_NotNil(t *testing.T) {
 }
 
 func TestInterpreterBuilder_BytePatterns(t *testing.T) {
-	builder := interpreter.InterpreterBuilder{}
+	builder := interpreter.InterpreterEngineBuilder{}
 	inputDef := schema.CommandDefinition{
 		Cla: []schema.ByteDefinition{
 			{

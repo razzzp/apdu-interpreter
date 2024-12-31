@@ -1,13 +1,13 @@
 package interpreter
 
 import (
+	"log"
+
 	"github.com/razzzp/apdu-interpreter/schema"
-	"github.com/razzzp/apdu-interpreter/utils"
 )
 
-type InterpreterBuilder struct {
-	eCollector utils.ErrorCollector
-	result     *InterpreterEngine
+type InterpreterEngineBuilder struct {
+	result *InterpreterEngine
 }
 
 type Schema struct {
@@ -56,7 +56,7 @@ func buildByteIntpsToList(
 	return nil
 }
 
-func (ib *InterpreterBuilder) BuildCommandInterpreter(def *schema.CommandDefinition) (*apduCommandInterpreter, error) {
+func (ib *InterpreterEngineBuilder) BuildCommandInterpreter(def *schema.CommandDefinition) (*apduCommandInterpreter, error) {
 	apduIntp := apduCommandInterpreter{}
 	err := buildByteIntpsToList(def.Cla, &apduIntp.ClaMatcher)
 	if err != nil {
@@ -82,22 +82,24 @@ func (ib *InterpreterBuilder) BuildCommandInterpreter(def *schema.CommandDefinit
 	return &apduIntp, nil
 }
 
-func (ib *InterpreterBuilder) Build(schema schema.SchemaDefinition) *InterpreterEngine {
-	ib.result = &InterpreterEngine{
-		Schema: Schema{
-			Name:        schema.Name,
-			Group:       schema.Group,
-			Description: schema.Description,
-			Labels:      schema.Labels,
-		},
+func (ib *InterpreterEngineBuilder) BuildSchema(schemaDef *schema.SchemaDefinition) *InterpreterEngine {
+	if ib.result == nil {
+		ib.result = &InterpreterEngine{
+			Schemas: []*schema.SchemaDefinition{},
+		}
 	}
-	for _, specDef := range schema.Spec {
+
+	ib.result.Schemas = append(ib.result.Schemas, schemaDef)
+
+	for _, specDef := range schemaDef.Spec {
 		commandIntp, err := ib.BuildCommandInterpreter(&specDef.Command)
 		if err != nil {
-			ib.eCollector.AppendError(err.Error())
+			log.Printf("[Error] Failed to build interpreter for command spec `%s`: %v", specDef.Name, err)
 			continue
 		}
 		apduIntp := ApduInterpreter{
+			SchemaDef:          schemaDef,
+			CommandResponseDef: &specDef,
 			CommandInterpreter: commandIntp,
 		}
 		ib.result.ApduInterpreters = append(ib.result.ApduInterpreters, &apduIntp)

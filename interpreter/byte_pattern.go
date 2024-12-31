@@ -17,7 +17,7 @@ type BytePatternMatcher struct {
 }
 
 // Interpret implements Matcher.
-func (bp *BytePatternMatcher) Interpret(i Interpretation, b byte) error {
+func (bp *BytePatternMatcher) Interpret(i Interpretations, b byte) error {
 	i.Add(bp.Description)
 	return nil
 }

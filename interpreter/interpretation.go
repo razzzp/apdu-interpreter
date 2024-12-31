@@ -2,20 +2,44 @@ package interpreter
 
 import "github.com/razzzp/apdu-interpreter/apdu"
 
-type ByteInterpretation struct {
+type ByteInterpretations struct {
 	Intps []any
 }
+type DataInterpretations struct {
+}
 
-func (bi *ByteInterpretation) Add(intp any) {
+func (bi *ByteInterpretations) Add(intp any) {
 	bi.Intps = append(bi.Intps, intp)
+}
+
+type ApduInterpretation struct {
+	Command  *CommandInterpretation
+	Response *ResponseInterpretation
 }
 
 type CommandInterpretation struct {
 	Command     *apdu.ApduCommand
-	Interpreter *ApduCommandInterpreter
-	ClaIntp     *ByteInterpretation
-	InsIntp     *ByteInterpretation
-	P1Intp      *ByteInterpretation
-	P2Intp      *ByteInterpretation
-	P3Intp      *ByteInterpretation
+	Interpreter ApduCommandInterpreter
+	ClaIntp     *ByteInterpretations
+	InsIntp     *ByteInterpretations
+	P1Intp      *ByteInterpretations
+	P2Intp      *ByteInterpretations
+	P3Intp      *ByteInterpretations
+	DataIntp    *DataInterpretations
+}
+
+func NewCommandInterpretation(command *apdu.ApduCommand, interpreter ApduCommandInterpreter) CommandInterpretation {
+	return CommandInterpretation{
+		Command:     command,
+		Interpreter: interpreter,
+		ClaIntp:     &ByteInterpretations{},
+		InsIntp:     &ByteInterpretations{},
+		P1Intp:      &ByteInterpretations{},
+		P2Intp:      &ByteInterpretations{},
+		P3Intp:      &ByteInterpretations{},
+	}
+}
+
+type ResponseInterpretation struct {
+	// TODO
 }

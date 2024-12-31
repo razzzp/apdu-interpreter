@@ -1,14 +1,10 @@
 package main
 
 import (
-	"strings"
-
-	"github.com/razzzp/apdu-interpreter/schema"
-
-	"github.com/razzzp/apdu-interpreter/interpreter"
+	"github.com/razzzp/apdu-interpreter/app"
 )
 
 func main() {
-	_ = schema.NewYamlSchemaDecoder(strings.NewReader("test"))
-	_ = interpreter.InterpreterBuilder{}
+	app := app.ApduInterpreterApp{}
+	app.Run()
 }
