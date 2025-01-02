@@ -18,8 +18,8 @@ type Schema struct {
 }
 
 func appendByteInterpreter(def schema.ByteDefinition, interpreters []ByteInterpreter) ([]ByteInterpreter, error) {
-	if def.SingleBitDefinition != nil {
-		intp, err := SingleBitDefinition(def.SingleBitDefinition.BitNumber, def.SingleBitDefinition.ZeroIsOn, def.SingleBitDefinition.Description)
+	if def.SingleBit != nil {
+		intp, err := SingleBitDefinition(def.SingleBit.BitNumber, def.SingleBit.ZeroIsOn, def.SingleBit.Description)
 		if err != nil {
 			return nil, err
 		}
@@ -38,6 +38,14 @@ func appendByteInterpreter(def schema.ByteDefinition, interpreters []ByteInterpr
 			return nil, err
 		}
 		return append(interpreters, intps...), nil
+	}
+
+	if def.BytePattern != nil {
+		intp, err := BytePattern(def.BytePattern.Pattern, def.BytePattern.Description)
+		if err != nil {
+			return nil, err
+		}
+		return append(interpreters, intp), nil
 	}
 	return interpreters, nil
 }
@@ -58,14 +66,17 @@ func buildByteIntpsToList(
 
 func (ib *InterpreterEngineBuilder) BuildCommandInterpreter(def *schema.CommandDefinition) (*apduCommandInterpreter, error) {
 	apduIntp := apduCommandInterpreter{}
+
 	err := buildByteIntpsToList(def.Cla, &apduIntp.ClaMatcher)
 	if err != nil {
 		return nil, err
 	}
+
 	err = buildByteIntpsToList(def.Ins, &apduIntp.InsMatcher)
 	if err != nil {
 		return nil, err
 	}
+
 	err = buildByteIntpsToList(def.P1, &apduIntp.P1Matcher)
 	if err != nil {
 		return nil, err

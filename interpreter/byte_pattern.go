@@ -18,7 +18,9 @@ type BytePatternMatcher struct {
 
 // Interpret implements Matcher.
 func (bp *BytePatternMatcher) Interpret(i Interpretations, b byte) error {
-	i.Add(bp.Description)
+	if bp.Matches(b) && bp.Description != "" {
+		i.Add(bp.Description)
+	}
 	return nil
 }
 

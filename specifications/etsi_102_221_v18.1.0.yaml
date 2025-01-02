@@ -7,7 +7,7 @@ spec:
   - command:
       name: SELECT FILE
       cla:
-        - bytepatterns:
+        - bytePatterns:
             pattern:
               - "0X"
               - "4X"

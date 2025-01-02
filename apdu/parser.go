@@ -93,7 +93,7 @@ func (alp *apduLogParser) ReadNextToken() (*token, error) {
 				// already formed hex
 				hexAsByte, err := hex.DecodeString(string(hexArr))
 				if err != nil {
-					return nil, fmt.Errorf("invalid dex: %s", err.Error())
+					return nil, fmt.Errorf("invalid hex: %s", err.Error())
 				}
 				return &token{
 					TokenType: TOKEN_HEX,
@@ -151,7 +151,7 @@ func (alp *apduLogParser) GetNextCommandResponse() (*ApduCommandResponse, error)
 	lineArr, err := alp.ReadLine()
 	if err != nil {
 		if err.Error() != "EOF" {
-			return nil, fmt.Errorf("failed to read command line: %s", err.Error())
+			return nil, fmt.Errorf("line %d: failed to read command: %s", alp.line-1, err.Error())
 		} else {
 			return nil, err
 		}
@@ -159,7 +159,7 @@ func (alp *apduLogParser) GetNextCommandResponse() (*ApduCommandResponse, error)
 
 	lineLength := len(lineArr)
 	if lineLength < 4 {
-		return nil, fmt.Errorf("invalid apdu command, less than 4 bytes")
+		return nil, fmt.Errorf("line %d: invalid apdu command, less than 4 bytes", alp.line-1)
 	}
 
 	// set command
@@ -168,27 +168,28 @@ func (alp *apduLogParser) GetNextCommandResponse() (*ApduCommandResponse, error)
 	result.Command.P1 = lineArr[2]
 	result.Command.P2 = lineArr[3]
 	if lineLength > 4 {
-		result.Command.P3 = lineArr[4]
-	}
-	// check data and length
-	if int(result.Command.P3) != 0 {
-		if lineLength != 5+int(result.Command.P3) && lineLength != 6+int(result.Command.P3) {
-			log.Printf("Mismatched P3 and data length, expected: %d, found: %d", int(result.Command.P3), lineLength-5)
-			result.Command.Data = lineArr[5:]
-		} else {
-			result.Command.Data = lineArr[5 : 5+int(result.Command.P3)]
+		result.Command.P3 = &lineArr[4]
+		// check data and length
+		if int(*result.Command.P3) != 0 {
+			if lineLength != 5+int(*result.Command.P3) && lineLength != 6+int(*result.Command.P3) {
+				log.Printf("Warning: line %d: mismatched P3 and data length, expected: %d, found: %d", alp.line-1, int(*result.Command.P3), lineLength-5)
+				result.Command.Data = lineArr[5:]
+			} else {
+				result.Command.Data = lineArr[5 : 5+int(*result.Command.P3)]
+			}
 		}
-	}
 
-	// le
-	if lineLength > 5+int(result.Command.P3) {
-		result.Command.Le = lineArr[5+int(result.Command.P3)]
+		// le
+		if lineLength > 5+int(*result.Command.P3) {
+			result.Command.Le = &lineArr[5+int(*result.Command.P3)]
+		}
 	}
 
 	// read response
 	lineArr, err = alp.ReadLine()
 	if err != nil {
-		return nil, fmt.Errorf("failed to read response line: %s", err.Error())
+		log.Printf("Warning: line %d: failed to read response line: %s", alp.line-1, err.Error())
+		return &result, nil
 	}
 
 	lineLength = len(lineArr)
@@ -205,7 +206,7 @@ func (alp *apduLogParser) GetNextCommandResponse() (*ApduCommandResponse, error)
 			return &result, nil
 		}
 	} else {
-		log.Printf("Invalid response at line: %d", alp.line-1)
+		log.Printf("Warning: line %d: Invalid response, less than 2 bytes", alp.line-1)
 		return &result, nil
 	}
 }

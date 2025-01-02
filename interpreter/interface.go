@@ -1,6 +1,9 @@
 package interpreter
 
-import "github.com/razzzp/apdu-interpreter/apdu"
+import (
+	"github.com/razzzp/apdu-interpreter/apdu"
+	"github.com/razzzp/apdu-interpreter/schema"
+)
 
 type Interpretations interface {
 	Add(intp any)
@@ -18,4 +21,11 @@ type ApduCommandInterpreter interface {
 
 type ApduReponseInterpreter interface {
 	//TODO
+}
+
+type ApduInterpreter struct {
+	SchemaDef           *schema.SchemaDefinition
+	CommandResponseDef  *schema.CommandResponseDefinition
+	CommandInterpreter  ApduCommandInterpreter
+	ResponseInterpreter ApduReponseInterpreter
 }

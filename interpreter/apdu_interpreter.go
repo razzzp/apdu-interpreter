@@ -1,16 +1,6 @@
 package interpreter
 
-import (
-	"github.com/razzzp/apdu-interpreter/apdu"
-	"github.com/razzzp/apdu-interpreter/schema"
-)
-
-type ApduInterpreter struct {
-	SchemaDef           *schema.SchemaDefinition
-	CommandResponseDef  *schema.CommandResponseDefinition
-	CommandInterpreter  ApduCommandInterpreter
-	ResponseInterpreter ApduReponseInterpreter
-}
+import "github.com/razzzp/apdu-interpreter/apdu"
 
 type apduCommandInterpreter struct {
 	ClaMatcher      []ByteInterpreter
@@ -55,19 +45,19 @@ func (aci *apduCommandInterpreter) Interpret(apdu *apdu.ApduCommand) (*CommandIn
 		}
 	}
 	for _, matcher := range aci.InsMatcher {
-		err := matcher.Interpret(result.ClaIntp, apdu.Ins)
+		err := matcher.Interpret(result.InsIntp, apdu.Ins)
 		if err != nil {
 			return nil, err
 		}
 	}
 	for _, matcher := range aci.P1Matcher {
-		err := matcher.Interpret(result.ClaIntp, apdu.P1)
+		err := matcher.Interpret(result.P1Intp, apdu.P1)
 		if err != nil {
 			return nil, err
 		}
 	}
 	for _, matcher := range aci.P2Matcher {
-		err := matcher.Interpret(result.ClaIntp, apdu.P2)
+		err := matcher.Interpret(result.P2Intp, apdu.P2)
 		if err != nil {
 			return nil, err
 		}

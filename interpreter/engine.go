@@ -15,7 +15,6 @@ type InterpreterEngine struct {
 
 func (ie *InterpreterEngine) Interpret() []*ApduInterpretation {
 	result := []*ApduInterpretation{}
-	// TODO
 	for {
 		apdu, err := ie.Parser.GetNextCommandResponse()
 		if err != nil {
@@ -33,6 +32,7 @@ func (ie *InterpreterEngine) Interpret() []*ApduInterpretation {
 			if err != nil {
 				log.Printf("Error: reading interpreting command: %v", err)
 			}
+			// doesn't match
 			if cmdIntp == nil {
 				continue
 			}

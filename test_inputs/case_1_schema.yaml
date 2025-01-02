@@ -1,0 +1,29 @@
+name: Case 1 Schema
+group: Test
+labels:
+  - Test
+version: V1
+spec:
+  - command:
+      name: SELECT FILE
+      cla:
+        - bytePattern:
+            pattern: "A0"
+      ins:
+        - bytePattern:
+            pattern: "A4"
+      p1:
+        - bytePattern:
+            description: Select by identifier
+            pattern: "00"
+        - bytePattern:
+            description: Select by absolute path
+            pattern: "08"
+        - bytePattern:
+            description: Select by relative path
+            pattern: "09"
+      p2:
+        - bytePattern:
+            pattern: "00"
+      
+      

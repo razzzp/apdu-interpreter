@@ -25,9 +25,9 @@ func TestApduLogParser_FullCommandResponse(t *testing.T) {
 	assert.Equal(t, byte(1), cmd.Command.Ins)
 	assert.Equal(t, byte(2), cmd.Command.P1)
 	assert.Equal(t, byte(3), cmd.Command.P2)
-	assert.Equal(t, byte(4), cmd.Command.P3)
+	assert.Equal(t, byte(4), *cmd.Command.P3)
 	assert.Equal(t, []byte{255, 255, 255, 255}, cmd.Command.Data)
-	assert.Equal(t, byte(5), cmd.Command.Le)
+	assert.Equal(t, byte(5), *cmd.Command.Le)
 
 	assert.Equal(t, []byte{255, 255}, cmd.Response.Data)
 	assert.Equal(t, byte(06), cmd.Response.SW1)
@@ -50,9 +50,9 @@ func TestApduLogParser_NoP3NoRData(t *testing.T) {
 	assert.Equal(t, byte(1), cmd.Command.Ins)
 	assert.Equal(t, byte(2), cmd.Command.P1)
 	assert.Equal(t, byte(3), cmd.Command.P2)
-	assert.Equal(t, byte(0), cmd.Command.P3)
+	assert.Nil(t, cmd.Command.P3)
 	assert.Nil(t, cmd.Command.Data)
-	assert.Equal(t, byte(0), cmd.Command.Le)
+	assert.Nil(t, cmd.Command.Le)
 
 	assert.Nil(t, cmd.Response.Data)
 	assert.Equal(t, byte(06), cmd.Response.SW1)

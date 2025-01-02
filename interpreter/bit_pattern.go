@@ -71,7 +71,7 @@ func (bp *BitPatternInterpreter) Matches(b byte) bool {
 }
 
 func (bp *BitPatternInterpreter) Interpret(i Interpretations, b byte) error {
-	if bp.Matches(b) {
+	if bp.Matches(b) && bp.Description != "" {
 		i.Add(fmt.Sprintf("0b%s: %s", bp.Pattern, bp.Description))
 	}
 

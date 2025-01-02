@@ -25,9 +25,10 @@ type CommandResponseDefinition struct {
 }
 
 type ByteDefinition struct {
-	BitPattern          *BitPatternDefinition   `yaml:"bitPattern"`
-	BytePatterns        *BytePatternsDefinition `yaml:"bytePatterns"`
-	SingleBitDefinition *SingleBitDefinition    `yaml:"singleBit"`
+	BitPattern   *BitPatternDefinition   `yaml:"bitPattern"`
+	BytePatterns *BytePatternsDefinition `yaml:"bytePatterns"`
+	BytePattern  *BytePatternDefinition  `yaml:"bytePattern"`
+	SingleBit    *SingleBitDefinition    `yaml:"singleBit"`
 }
 
 type SingleBitDefinition struct {
@@ -43,6 +44,11 @@ type BitPatternDefinition struct {
 type BytePatternsDefinition struct {
 	Description string
 	Patterns    []string
+}
+
+type BytePatternDefinition struct {
+	Description string
+	Pattern     string
 }
 
 type SchemaDefinition struct {

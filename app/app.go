@@ -2,6 +2,7 @@ package app
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -20,8 +21,10 @@ type ApduInterpreterApp struct {
 	Config ApduInterpreterConfiguration
 }
 
-func NewApduInterpreter(config ApduInterpreterConfiguration) *ApduInterpreterApp {
-	return &ApduInterpreterApp{}
+func NewApduInterpreterApp(config ApduInterpreterConfiguration) *ApduInterpreterApp {
+	return &ApduInterpreterApp{
+		Config: config,
+	}
 }
 
 func (a *ApduInterpreterApp) BuildSchema() (*schema.SchemaDefinition, error) {
@@ -31,7 +34,7 @@ func (a *ApduInterpreterApp) BuildSchema() (*schema.SchemaDefinition, error) {
 	}
 
 	if stat.IsDir() {
-		//TODO
+		//TODO read all files in dir and build schemas
 		return nil, fmt.Errorf("not immplemented")
 	} else {
 		file, err := os.Open(a.Config.SchemaPath)
@@ -55,11 +58,10 @@ func (a *ApduInterpreterApp) BuildApduParser() (apdu.ApduParser, error) {
 	}
 
 	if stat.IsDir() {
-		//TODO
 		return nil, fmt.Errorf("input must be a file")
 	}
 
-	file, err := os.Open(a.Config.SchemaPath)
+	file, err := os.Open(a.Config.InputFile)
 	if err != nil {
 		return nil, fmt.Errorf("error opening schema file: %v", err)
 	}
@@ -84,4 +86,13 @@ func (a *ApduInterpreterApp) Run() {
 	}
 
 	engine.Parser = parser
+	// interpret
+	result := engine.Interpret()
+	fmt.Print("Interpretations:\n")
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	for _, intp := range result {
+		enc.Encode(intp)
+		fmt.Print("\n")
+	}
 }
