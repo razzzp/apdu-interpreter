@@ -2,12 +2,12 @@ package app
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 
 	"github.com/razzzp/apdu-interpreter/apdu"
+	"github.com/razzzp/apdu-interpreter/formatter"
 	"github.com/razzzp/apdu-interpreter/interpreter"
 	"github.com/razzzp/apdu-interpreter/schema"
 )
@@ -88,11 +88,14 @@ func (a *ApduInterpreterApp) Run() {
 	engine.Parser = parser
 	// interpret
 	result := engine.Interpret()
-	fmt.Print("Interpretations:\n")
-	enc := json.NewEncoder(os.Stdout)
-	enc.SetIndent("", "  ")
-	for _, intp := range result {
-		enc.Encode(intp)
-		fmt.Print("\n")
-	}
+	//print
+	f := formatter.NewTextInlineWriter(20, 20, os.Stdout)
+	f.Write(result)
+	// fmt.Print("Interpretations:\n")
+	// enc := json.NewEncoder(os.Stdout)
+	// enc.SetIndent("", "  ")
+	// for _, intp := range result {
+	// 	enc.Encode(intp)
+	// 	fmt.Print("\n")
+	// }
 }

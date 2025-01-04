@@ -5,6 +5,11 @@ import "github.com/razzzp/apdu-interpreter/apdu"
 type ByteInterpretations struct {
 	Intps []any
 }
+
+func (bi *ByteInterpretations) Count() int {
+	return len(bi.Intps)
+}
+
 type DataInterpretations struct {
 }
 
@@ -13,8 +18,9 @@ func (bi *ByteInterpretations) Add(intp any) {
 }
 
 type ApduInterpretation struct {
-	Command  *CommandInterpretation
-	Response *ResponseInterpretation
+	ApduInterpreter *ApduInterpreter
+	Command         *CommandInterpretation
+	Response        *ResponseInterpretation
 }
 
 type CommandInterpretation struct {

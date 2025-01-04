@@ -37,7 +37,9 @@ func (ie *InterpreterEngine) Interpret() []*ApduInterpretation {
 				continue
 			}
 			// create interpretation and append to result
-			interpretation = &ApduInterpretation{}
+			interpretation = &ApduInterpretation{
+				ApduInterpreter: interpreter,
+			}
 			interpretation.Command = cmdIntp
 			result = append(result, interpretation)
 			// check response

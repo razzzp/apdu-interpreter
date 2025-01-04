@@ -4,8 +4,9 @@ labels:
   - Test
 version: V1
 spec:
-  - command:
-      name: SELECT FILE
+  - name: SELECT FILE
+    description: Selects a file in the file system
+    command:
       cla:
         - bytePattern:
             pattern: "A0"

@@ -1,6 +1,8 @@
 package interpreter
 
-import "github.com/razzzp/apdu-interpreter/apdu"
+import (
+	"github.com/razzzp/apdu-interpreter/apdu"
+)
 
 type apduCommandInterpreter struct {
 	ClaMatcher      []ByteInterpreter
