@@ -89,7 +89,7 @@ func (a *ApduInterpreterApp) Run() {
 	// interpret
 	result := engine.Interpret()
 	//print
-	f := formatter.NewTextInlineWriter(20, 20, os.Stdout)
+	f := formatter.NewTextInlineWriter(20, 100, os.Stdout)
 	f.Write(result)
 	// fmt.Print("Interpretations:\n")
 	// enc := json.NewEncoder(os.Stdout)

@@ -89,6 +89,10 @@ func (ib *InterpreterEngineBuilder) BuildCommandInterpreter(def *schema.CommandD
 	if err != nil {
 		return nil, err
 	}
+	// if no P3 interpreter, add default length interpreter
+	if len(apduIntp.P3Matcher) == 0 {
+		apduIntp.P3Matcher = append(apduIntp.P3Matcher, NewLengthInterpreter())
+	}
 
 	return &apduIntp, nil
 }

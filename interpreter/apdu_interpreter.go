@@ -64,5 +64,15 @@ func (aci *apduCommandInterpreter) Interpret(apdu *apdu.ApduCommand) (*CommandIn
 			return nil, err
 		}
 	}
+
+	if apdu.P3 != nil {
+		for _, matcher := range aci.P3Matcher {
+			err := matcher.Interpret(result.P3Intp, *apdu.P3)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
 	return &result, nil
 }

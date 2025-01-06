@@ -15,8 +15,9 @@ type textInlineWriter struct {
 }
 
 type Table struct {
-	Widths []uint
-	Rows   []*Row
+	Widths      []uint
+	ColSepWidth uint
+	Rows        []*Row
 }
 
 func (t *Table) SetValue(rowIdx int, colIdx int, val string) {
@@ -60,6 +61,8 @@ func (t *Table) Print(writer io.StringWriter) {
 				valToPrint += strings.Repeat(" ", diffWidth)
 			}
 			writer.WriteString(valToPrint)
+			// col sep
+			writer.WriteString(strings.Repeat(" ", int(t.ColSepWidth)))
 		}
 		writer.WriteString("\n")
 	}
@@ -91,9 +94,6 @@ func (tf *textInlineWriter) formatBytes(bytes []byte) string {
 	return hex.EncodeToString(bytes)
 }
 func (tf *textInlineWriter) generateTableByteIntps(label string, rowIdx int, bintp *interpreter.ByteInterpretations, table *Table) int {
-	if bintp == nil || bintp.Count() == 0 {
-		return rowIdx
-	}
 
 	table.SetValue(rowIdx, 1, label)
 	rowIdx++
@@ -114,17 +114,23 @@ func (tf *textInlineWriter) generateTableInterpreter(rowIdx int, intpr *interpre
 	return rowIdx
 }
 
+func byteAsHex(b byte) string {
+	return hex.EncodeToString([]byte{b})[0:]
+}
+
 func (tf *textInlineWriter) generateTable(interpretations []*interpreter.ApduInterpretation) *Table {
 	cmdWidth := tf.Widths[0]
 	// intpWidth := tf.Widths[1]
 	result := &Table{
-		Widths: tf.Widths,
+		Widths:      tf.Widths,
+		ColSepWidth: 3,
 	}
 
 	intpIdx := 0
 	for _, intp := range interpretations {
 
 		// add rows for cmd first
+		cmd := intp.Command.Command
 		curCmdBytes := tf.formatBytes(intp.Command.Command.AsBytes())
 		cmdLines := len(curCmdBytes)/int(cmdWidth) + 1
 		for i := 0; i < cmdLines; i++ {
@@ -140,12 +146,16 @@ func (tf *textInlineWriter) generateTable(interpretations []*interpreter.ApduInt
 		// add matching cmd desc
 		curRow = tf.generateTableInterpreter(curRow, intp.ApduInterpreter, result)
 		// add interpretations
-		curRow = tf.generateTableByteIntps("CLA:", curRow, intp.Command.ClaIntp, result)
-		curRow = tf.generateTableByteIntps("INS:", curRow, intp.Command.InsIntp, result)
-		curRow = tf.generateTableByteIntps("P1:", curRow, intp.Command.P1Intp, result)
-		curRow = tf.generateTableByteIntps("P2:", curRow, intp.Command.P2Intp, result)
-		_ = tf.generateTableByteIntps("P3:", curRow, intp.Command.P3Intp, result)
-		intpIdx++
+		curRow = tf.generateTableByteIntps(fmt.Sprintf("CLA: %s", byteAsHex(cmd.Cla)), curRow, intp.Command.ClaIntp, result)
+		curRow = tf.generateTableByteIntps(fmt.Sprintf("INS: %s", byteAsHex(cmd.Ins)), curRow, intp.Command.InsIntp, result)
+		curRow = tf.generateTableByteIntps(fmt.Sprintf("P1: %s", byteAsHex(cmd.P1)), curRow, intp.Command.P1Intp, result)
+		curRow = tf.generateTableByteIntps(fmt.Sprintf("P2: %s", byteAsHex(cmd.P2)), curRow, intp.Command.P2Intp, result)
+		p3Label := "P3:"
+		if cmd.P3 != nil {
+			p3Label = fmt.Sprintf("P3: %s", byteAsHex(*cmd.P3))
+		}
+		_ = tf.generateTableByteIntps(p3Label, curRow, intp.Command.P3Intp, result)
+		intpIdx = curRow
 	}
 	return result
 }
