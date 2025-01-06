@@ -43,13 +43,14 @@ func (t *Table) Print(writer io.StringWriter) {
 		for i, col := range row.Columns {
 			// default width is 5 chars
 			colWidth := 5
+			if i < len(t.Widths) {
+				colWidth = int(t.Widths[i])
+			}
+
 			valToPrint := ""
 			if len(col.Value) > 0 {
 				endIdx := len(col.Value)
 				// cut string if too long
-				if i < len(t.Widths) {
-					colWidth = int(t.Widths[i])
-				}
 				endIdx = min(colWidth, endIdx)
 				valToPrint = col.Value[0:endIdx]
 			}

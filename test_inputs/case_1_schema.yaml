@@ -26,5 +26,20 @@ spec:
       p2:
         - bytePattern:
             pattern: "00"
+  - name: STATUS
+    description: This command provides information about the current directory.
+    command:
+      cla:
+        - bytePattern:
+            pattern: "A0"
+      ins:
+        - bytePattern:
+            pattern: "F2"
+      p1:
+        - bytePattern:
+            pattern: "00"
+      p2:
+        - bytePattern:
+            pattern: "00"
       
       
