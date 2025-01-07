@@ -135,6 +135,10 @@ func (alp *apduLogParser) ReadLine() (result []byte, err error) {
 		if tok.TokenType == TOKEN_HEX {
 			result = append(result, tok.Value)
 		} else if tok.TokenType == TOKEN_NEWLINE {
+			// if blank line continue next line
+			if len(result) == 0 {
+				continue
+			}
 			return result, nil
 		} else {
 			log.Printf("Unknown token type %v", tok)
@@ -148,6 +152,7 @@ func (alp *apduLogParser) GetNextCommandResponse() (*ApduCommandResponse, error)
 	}
 
 	// read command
+
 	lineArr, err := alp.ReadLine()
 	if err != nil {
 		if err.Error() != "EOF" {

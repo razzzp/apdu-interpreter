@@ -1,15 +1,354 @@
-name: TS 102 221 V18.2.0
+name: TS 102 221
 group: ETSI
 labels:
-  - Common
+  - Mobile
 version: V18.2.0
 spec:
-  - command:
-      name: SELECT FILE
+  - name: SELECT FILE
+    description: Selects a file in the file system
+    command:
       cla:
         - bytePatterns:
-            pattern:
+            patterns:
               - "0X"
               - "4X"
               - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "A4"
+  - name: STATUS
+    description: 
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "8X"
+              - "CX"
+              - "EX"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "F2"
+  - name: READ BINARY 
+    description: 
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "B0"
+  - name: UPDATE BINARY
+    description: 
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "D6"
+  - name: READ RECORD
+    description: 
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "B2"
+  - name: UPDATE RECORD
+    description: 
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "DC"
+  - name: SEARCH RECORD
+    description: 
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "A2"
+  - name: INCREASE 
+    description: 
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "8X"
+              - "CX"
+              - "EX"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "32"
+  - name: RETRIEVE DATA 
+    description: 
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "8X"
+              - "CX"
+              - "EX"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "CB"
+  - name: SET DATA 
+    description: 
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "8X"
+              - "CX"
+              - "EX"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "DB"
+  - name: VERIFY PIN 
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "20"
+  - name: CHANGE PIN 
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "24"
+  - name: DISABLE PIN 
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "26"
+  - name: ENABLE PIN 
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "28"
+  - name: UNBLOCK PIN 
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "2C"
+  - name: DEACTIVATE FILE 
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "04"
+  - name: ACTIVATE FILE
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "44"
+  - name: AUTHENTICATE 
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePatterns:
+            patterns: 
+              - "88"
+              - "89"
+  - name: GET CHALLENGE 
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            pattern: "84"
+  - name: TERMINAL CAPABILITY
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "8X"
+              - "CX"
+              - "EX"
+      ins:
+        - bytePattern:
+            pattern: "AA"
+  - name: TERMINAL PROFILE 
+    description:
+    command:
+      cla:
+        - bytePattern:
+            pattern: "80"
+      ins:
+        - bytePattern:
+            pattern: "10"
+  - name: ENVELOPE
+    description:
+    command:
+      cla:
+        - bytePattern:
+            pattern: "80"
+      ins:
+        - bytePattern:
+            pattern: "C2"
+  - name: FETCH
+    description:
+    command:
+      cla:
+        - bytePattern:
+            pattern: "80"
+      ins:
+        - bytePattern:
+            pattern: "12"
+  - name: TERMINAL RESPONSE 
+    description:
+    command:
+      cla:
+        - bytePattern:
+            pattern: "80"
+      ins:
+        - bytePattern:
+            pattern: "14"
+  - name: MANAGE CHANNEL
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "70"
+  - name: MANAGE SECURE CHANNEL
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "73"
+  - name: TRANSACT DATA 
+    description:
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+      ins:
+        - bytePattern:
+            description:
+            pattern: "75"
+  - name: SUSPEND UICC 
+    description:
+    command:
+      cla:
+        - bytePattern:
+            pattern: "80"
+      ins:
+        - bytePattern:
+            pattern: "76"
+
+
+            
+
       

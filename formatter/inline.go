@@ -143,6 +143,14 @@ func (tf *textInlineWriter) generateTable(interpretations []*interpreter.ApduInt
 			result.SetValue(intpIdx+i, 0, curLine)
 		}
 		curRow := intpIdx
+
+		// no interpretation found
+		if intp.ApduInterpreter == nil {
+			// set unknown command and continue
+			result.SetValue(curRow, 1, "Unknown Command")
+			intpIdx = curRow + 1
+			continue
+		}
 		// add matching cmd desc
 		curRow = tf.generateTableInterpreter(curRow, intp.ApduInterpreter, result)
 		// add interpretations
