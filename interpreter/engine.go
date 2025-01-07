@@ -27,9 +27,7 @@ func (ie *InterpreterEngine) Interpret() []*ApduInterpretation {
 
 		// create empty interpretation
 		var interpretation *ApduInterpretation = &ApduInterpretation{
-			Command: &CommandInterpretation{
-				Command: apdu.Command,
-			},
+			CommandResponse: apdu,
 		}
 		result = append(result, interpretation)
 		for _, interpreter := range ie.ApduInterpreters {
@@ -44,9 +42,13 @@ func (ie *InterpreterEngine) Interpret() []*ApduInterpretation {
 				continue
 			}
 
-			interpretation.ApduInterpreter = interpreter
-			// replace empty interpretation with filled
-			interpretation.Command = cmdIntp
+			// create new interpretation
+			cmdRspInterpretation := &CommandResponseInterpretation{
+				Interpreter: interpreter,
+				CommandIntp: cmdIntp,
+			}
+			interpretation.Interpretations = append(interpretation.Interpretations, cmdRspInterpretation)
+
 			// check response
 			if apdu.Response == nil {
 				break

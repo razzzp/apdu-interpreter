@@ -6,6 +6,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/razzzp/apdu-interpreter/apdu"
 	"github.com/razzzp/apdu-interpreter/interpreter"
 )
 
@@ -94,7 +95,9 @@ func (tf *textInlineWriter) formatBytes(bytes []byte) string {
 	return hex.EncodeToString(bytes)
 }
 func (tf *textInlineWriter) generateTableByteIntps(label string, rowIdx int, bintp *interpreter.ByteInterpretations, table *Table) int {
-
+	if bintp == nil {
+		return rowIdx
+	}
 	table.SetValue(rowIdx, 1, label)
 	rowIdx++
 	for _, intp := range bintp.Intps {
@@ -114,6 +117,22 @@ func (tf *textInlineWriter) generateTableInterpreter(rowIdx int, intpr *interpre
 	return rowIdx
 }
 
+func (tf *textInlineWriter) generateTableCommandBreakdown(rowIdx int, cmd *apdu.ApduCommand, table *Table) int {
+	table.SetValue(rowIdx, 1, fmt.Sprintf("CLA: %s", byteAsHex(cmd.Cla)))
+	rowIdx++
+	table.SetValue(rowIdx, 1, fmt.Sprintf("INS: %s", byteAsHex(cmd.Ins)))
+	rowIdx++
+	table.SetValue(rowIdx, 1, fmt.Sprintf("P1: %s", byteAsHex(cmd.P1)))
+	rowIdx++
+	table.SetValue(rowIdx, 1, fmt.Sprintf("P2: %s", byteAsHex(cmd.P2)))
+	rowIdx++
+	if cmd.P3 != nil {
+		table.SetValue(rowIdx, 1, fmt.Sprintf("P3: %s", byteAsHex(*cmd.P3)))
+		rowIdx++
+	}
+	return rowIdx
+}
+
 func byteAsHex(b byte) string {
 	return hex.EncodeToString([]byte{b})[0:]
 }
@@ -127,11 +146,11 @@ func (tf *textInlineWriter) generateTable(interpretations []*interpreter.ApduInt
 	}
 
 	intpIdx := 0
-	for _, intp := range interpretations {
+	for _, apduIntp := range interpretations {
 
-		// add rows for cmd first
-		cmd := intp.Command.Command
-		curCmdBytes := tf.formatBytes(intp.Command.Command.AsBytes())
+		// add column for cmd first
+		cmd := apduIntp.CommandResponse.Command
+		curCmdBytes := tf.formatBytes(cmd.AsBytes())
 		cmdLines := len(curCmdBytes)/int(cmdWidth) + 1
 		for i := 0; i < cmdLines; i++ {
 			endIdx := min(len(curCmdBytes), (i+1)*int(cmdWidth))
@@ -144,25 +163,30 @@ func (tf *textInlineWriter) generateTable(interpretations []*interpreter.ApduInt
 		}
 		curRow := intpIdx
 
+		// add command breakdown
+		curRow = tf.generateTableCommandBreakdown(curRow, apduIntp.CommandResponse.Command, result)
+
 		// no interpretation found
-		if intp.ApduInterpreter == nil {
+		if len(apduIntp.Interpretations) == 0 {
 			// set unknown command and continue
 			result.SetValue(curRow, 1, "Unknown Command")
 			intpIdx = curRow + 1
 			continue
 		}
-		// add matching cmd desc
-		curRow = tf.generateTableInterpreter(curRow, intp.ApduInterpreter, result)
-		// add interpretations
-		curRow = tf.generateTableByteIntps(fmt.Sprintf("CLA: %s", byteAsHex(cmd.Cla)), curRow, intp.Command.ClaIntp, result)
-		curRow = tf.generateTableByteIntps(fmt.Sprintf("INS: %s", byteAsHex(cmd.Ins)), curRow, intp.Command.InsIntp, result)
-		curRow = tf.generateTableByteIntps(fmt.Sprintf("P1: %s", byteAsHex(cmd.P1)), curRow, intp.Command.P1Intp, result)
-		curRow = tf.generateTableByteIntps(fmt.Sprintf("P2: %s", byteAsHex(cmd.P2)), curRow, intp.Command.P2Intp, result)
-		p3Label := "P3:"
-		if cmd.P3 != nil {
-			p3Label = fmt.Sprintf("P3: %s", byteAsHex(*cmd.P3))
+
+		for _, intp := range apduIntp.Interpretations {
+			// add matching cmd desc
+			curRow = tf.generateTableInterpreter(curRow, intp.Interpreter, result)
+			// add interpretations
+			curRow = tf.generateTableByteIntps("CLA:", curRow, intp.CommandIntp.ClaIntp, result)
+			curRow = tf.generateTableByteIntps("INS:", curRow, intp.CommandIntp.InsIntp, result)
+			curRow = tf.generateTableByteIntps("P1:", curRow, intp.CommandIntp.P1Intp, result)
+			curRow = tf.generateTableByteIntps("P2:", curRow, intp.CommandIntp.P2Intp, result)
+			if cmd.P3 != nil {
+				_ = tf.generateTableByteIntps("P3:", curRow, intp.CommandIntp.P3Intp, result)
+			}
+
 		}
-		_ = tf.generateTableByteIntps(p3Label, curRow, intp.Command.P3Intp, result)
 		intpIdx = curRow
 	}
 	return result

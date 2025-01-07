@@ -39,7 +39,7 @@ func (aci *apduCommandInterpreter) Interpret(apdu *apdu.ApduCommand) (*CommandIn
 		return nil, nil
 	}
 
-	result := NewCommandInterpretation(apdu, aci)
+	result := NewCommandInterpretation()
 	for _, matcher := range aci.ClaMatcher {
 		err := matcher.Interpret(result.ClaIntp, apdu.Cla)
 		if err != nil {

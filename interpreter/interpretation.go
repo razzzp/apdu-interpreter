@@ -18,31 +18,32 @@ func (bi *ByteInterpretations) Add(intp any) {
 }
 
 type ApduInterpretation struct {
-	ApduInterpreter *ApduInterpreter
-	Command         *CommandInterpretation
-	Response        *ResponseInterpretation
+	CommandResponse *apdu.ApduCommandResponse
+	Interpretations []*CommandResponseInterpretation
+}
+
+type CommandResponseInterpretation struct {
+	Interpreter  *ApduInterpreter
+	CommandIntp  *CommandInterpretation
+	ResponseIntp *ResponseInterpretation
 }
 
 type CommandInterpretation struct {
-	Command     *apdu.ApduCommand
-	Interpreter ApduCommandInterpreter
-	ClaIntp     *ByteInterpretations
-	InsIntp     *ByteInterpretations
-	P1Intp      *ByteInterpretations
-	P2Intp      *ByteInterpretations
-	P3Intp      *ByteInterpretations
-	DataIntp    *DataInterpretations
+	ClaIntp  *ByteInterpretations
+	InsIntp  *ByteInterpretations
+	P1Intp   *ByteInterpretations
+	P2Intp   *ByteInterpretations
+	P3Intp   *ByteInterpretations
+	DataIntp *DataInterpretations
 }
 
-func NewCommandInterpretation(command *apdu.ApduCommand, interpreter ApduCommandInterpreter) CommandInterpretation {
+func NewCommandInterpretation() CommandInterpretation {
 	return CommandInterpretation{
-		Command:     command,
-		Interpreter: interpreter,
-		ClaIntp:     &ByteInterpretations{},
-		InsIntp:     &ByteInterpretations{},
-		P1Intp:      &ByteInterpretations{},
-		P2Intp:      &ByteInterpretations{},
-		P3Intp:      &ByteInterpretations{},
+		ClaIntp: &ByteInterpretations{},
+		InsIntp: &ByteInterpretations{},
+		P1Intp:  &ByteInterpretations{},
+		P2Intp:  &ByteInterpretations{},
+		P3Intp:  &ByteInterpretations{},
 	}
 }
 
