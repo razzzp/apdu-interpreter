@@ -120,7 +120,7 @@ func (tf *textInlineWriter) generateTableByteIntps(label string, rowIdx int, bin
 }
 
 func (tf *textInlineWriter) generateTableInterpreter(rowIdx int, intpr *interpreter.ApduInterpreter, table *Table) int {
-	table.SetValue(rowIdx, 1, fmt.Sprintf("%s : %s %s", intpr.SchemaDef.Group, intpr.SchemaDef.Name, intpr.SchemaDef.Version))
+	table.SetValue(rowIdx, 1, fmt.Sprintf("[%s] %s %s", intpr.SchemaDef.Group, intpr.SchemaDef.Name, intpr.SchemaDef.Version))
 	rowIdx++
 	table.SetValue(rowIdx, 1, intpr.CommandResponseDef.Name)
 	rowIdx++
@@ -177,6 +177,13 @@ func (tf *textInlineWriter) generateTableBytesHex(rowIdx, colIdx int, bytes []by
 	return rowIdx + cmdLines
 }
 
+func (tf *textInlineWriter) generateRowSeparator(rowIdx, numOfCols int, sepRune rune, table *Table) int {
+	for i := 0; i < numOfCols; i++ {
+		table.SetValue(rowIdx, i, strings.Repeat(string(sepRune), table.GetColWidth(i)))
+	}
+	return rowIdx + 1
+}
+
 func byteAsHex(b byte) string {
 	return hex.EncodeToString([]byte{b})[0:]
 }
@@ -228,6 +235,8 @@ func (tf *textInlineWriter) generateTable(interpretations []*interpreter.ApduInt
 			}
 		}
 
+		curIntpRow = tf.generateRowSeparator(curIntpRow, 2, '-', table)
+		// add separator
 		intpIdx = curIntpRow
 	}
 	return table
