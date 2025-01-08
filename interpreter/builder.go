@@ -64,8 +64,8 @@ func buildByteIntpsToList(
 	return nil
 }
 
-func (ib *InterpreterEngineBuilder) BuildCommandInterpreter(def *schema.CommandDefinition) (*apduCommandInterpreter, error) {
-	apduIntp := apduCommandInterpreter{}
+func (ib *InterpreterEngineBuilder) BuildCommandInterpreter(def *schema.CommandDefinition) (*commandInterpreter, error) {
+	apduIntp := commandInterpreter{}
 
 	err := buildByteIntpsToList(def.Cla, &apduIntp.ClaMatcher)
 	if err != nil {

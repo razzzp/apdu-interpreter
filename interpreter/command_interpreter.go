@@ -4,7 +4,7 @@ import (
 	"github.com/razzzp/apdu-interpreter/apdu"
 )
 
-type apduCommandInterpreter struct {
+type commandInterpreter struct {
 	ClaMatcher      []ByteInterpreter
 	InsMatcher      []ByteInterpreter
 	P1Matcher       []ByteInterpreter
@@ -14,7 +14,7 @@ type apduCommandInterpreter struct {
 	LeMatcher       ByteInterpreter
 }
 
-func (aci *apduCommandInterpreter) MatchesCla(apdu *apdu.ApduCommand) bool {
+func (aci *commandInterpreter) MatchesCla(apdu *apdu.ApduCommand) bool {
 	for _, matcher := range aci.ClaMatcher {
 		if matcher.Matches(apdu.Cla) {
 			return true
@@ -22,7 +22,7 @@ func (aci *apduCommandInterpreter) MatchesCla(apdu *apdu.ApduCommand) bool {
 	}
 	return false
 }
-func (aci *apduCommandInterpreter) MatchesIns(apdu *apdu.ApduCommand) bool {
+func (aci *commandInterpreter) MatchesIns(apdu *apdu.ApduCommand) bool {
 	for _, matcher := range aci.InsMatcher {
 		if matcher.Matches(apdu.Ins) {
 			return true
@@ -30,11 +30,11 @@ func (aci *apduCommandInterpreter) MatchesIns(apdu *apdu.ApduCommand) bool {
 	}
 	return false
 }
-func (aci *apduCommandInterpreter) Matches(apdu *apdu.ApduCommand) bool {
+func (aci *commandInterpreter) Matches(apdu *apdu.ApduCommand) bool {
 	return aci.MatchesCla(apdu) && aci.MatchesIns(apdu)
 }
 
-func (aci *apduCommandInterpreter) Interpret(apdu *apdu.ApduCommand) (*CommandInterpretation, error) {
+func (aci *commandInterpreter) Interpret(apdu *apdu.ApduCommand) (*CommandInterpretation, error) {
 	if !aci.Matches(apdu) {
 		return nil, nil
 	}

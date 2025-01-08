@@ -3,6 +3,41 @@ group: ETSI
 labels:
   - Mobile
 version: V18.2.0
+common:
+  responses:
+    - sw1: "90"
+      sw2: "00"
+      description: Normal ending of command
+    - sw1: "91"
+      sw2: "XX"
+      description: Normal ending with extra info
+    - sw1: "67"
+      sw2: "00"
+      description: Wrong length
+    - sw1: "6B"
+      sw2: "00"
+      description: Wrong parameter(s) P1-P2
+    - sw1: "6D"
+      sw2: "00"
+      description: INS not supported
+    - sw1: "6E"
+      sw2: "00"
+      description: CLA not supported
+    - sw1: "6F"
+      sw2: "00"
+      description: Technical problem, no precise diagnosis
+    - sw1: "69"
+      sw2: "00"
+      description: No info given
+    - sw1: "69"
+      sw2: "82"
+      description: Security status not satisfied
+    - sw1: "69"
+      sw2: "83"
+      description: Authentication/PIN method blocked
+    - sw1: "69"
+      sw2: "85"
+      description: Conditions of use not satisfied
 spec:
   - name: SELECT FILE
     description: Selects a file in the file system
@@ -18,7 +53,6 @@ spec:
             description:
             pattern: "A4"
   - name: STATUS
-    description: 
     command:
       cla:
         - bytePatterns:

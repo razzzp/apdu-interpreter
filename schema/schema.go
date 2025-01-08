@@ -11,10 +11,11 @@ type CommandDefinition struct {
 }
 
 type ResponseDefinition struct {
+	Description string
+	Sw1         string
+	Sw2         string
 	// TODO
-	Data any
-	SW1  any
-	SW2  any
+	// Data        any
 }
 
 type CommandResponseDefinition struct {
@@ -58,4 +59,9 @@ type SchemaDefinition struct {
 	Description string
 	Labels      []string
 	Spec        []CommandResponseDefinition
+	Common      CommonDefinitions
+}
+
+type CommonDefinitions struct {
+	Responses []ResponseDefinition
 }

@@ -14,18 +14,19 @@ type ByteInterpreter interface {
 	Interpret(i Interpretations, b byte) error
 }
 
-type ApduCommandInterpreter interface {
+type CommandInterpreter interface {
 	Matches(apdu *apdu.ApduCommand) bool
 	Interpret(apdu *apdu.ApduCommand) (*CommandInterpretation, error)
 }
 
-type ApduReponseInterpreter interface {
-	//TODO
+type ReponseInterpreter interface {
+	Matches(apdu *apdu.ApduCommand) bool
+	Interpret(apdu *apdu.ApduCommand) (*CommandInterpretation, error)
 }
 
 type ApduInterpreter struct {
 	SchemaDef           *schema.SchemaDefinition
 	CommandResponseDef  *schema.CommandResponseDefinition
-	CommandInterpreter  ApduCommandInterpreter
-	ResponseInterpreter ApduReponseInterpreter
+	CommandInterpreter  CommandInterpreter
+	ResponseInterpreter ReponseInterpreter
 }
