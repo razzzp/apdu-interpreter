@@ -1,0 +1,122 @@
+name: Card Specification
+group: GP
+labels:
+  - Global Platform
+version: V2.3.1
+common:
+  responses:
+    - sw1: "90"
+      sw2: "00"
+      description: Normal ending of command
+    - sw1: "91"
+      sw2: "XX"
+      description: Normal ending with extra info
+    - sw1: "64"
+      sw2: "00"
+      description: Not specific diagnosis
+    - sw1: "67"
+      sw2: "00"
+      description: Wrong length in Lc
+    - sw1: "68"
+      sw2: "81"
+      description: Logical channel not supported or is not active
+    - sw1: "69"
+      sw2: "82"
+      description: Security status not satisfied
+    - sw1: "69"
+      sw2: "85"
+      description: Conditions of use not satisfied
+    - sw1: "6A"
+      sw2: "86"
+      description: Incorrect P1 P1
+    - sw1: "6D"
+      sw2: "00"
+      description: Invalid instruction
+    - sw1: "6E"
+      sw2: "00"
+      description: Invalid class
+spec:
+  - name: DELETE
+    description: Delete a uniquely identifiable object 
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "8X"
+              - "CX"
+              - "EX"
+      ins:
+        - bytePattern:
+            pattern: "E4"
+      p1:
+        - bitPattern:
+            pattern: 0xxxxxxx
+            description: Last (or only command)
+        - bitPattern:
+            pattern: 1xxxxxxx
+            description: More DELETE commands
+      p2:
+        - bitPattern:
+            pattern: 0xxxxxxx
+            description: Delete object
+        - bitPattern:
+            pattern: 1xxxxxxx
+            description: Delete object and related object
+  - name: GET DATA
+    description: Retrieve  either  a  single |
+      BER-TLV-coded  data  object,  which  may  be constructed, or a set of BER-TLV-coded data objects
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "0X"
+              - "4X"
+              - "6X"
+              - "8X"
+              - "CX"
+              - "EX"
+      ins:
+        - bytePatterns:
+            patterns: 
+              - "CA"
+              - "CB"
+      p1:
+        - bytePattern:
+            pattern: XX
+            description: "'00' or high order tag value"
+      p2:
+        - bytePattern:
+            pattern: XX
+            description: Low order tag value
+  - name: GET STATUS
+    description: Delete a uniquely identifiable object 
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "8X"
+              - "CX"
+              - "EX"
+      ins:
+        - bytePattern:
+            pattern: "F2"
+      p1:
+        - bitPattern:
+            pattern: 1xxxxxxx
+            description:  Issuer Security Domain
+        - bitPattern:
+            pattern: x1xxxxxx
+            description: Applications, including Security Domains
+        - bitPattern:
+            pattern: xx1xxxxx
+            description: Executable Load Files 
+        - bitPattern:
+            pattern: xxx1xxxx
+            description: Executable Load Files and Executable Modules
+      p2:
+        - bitPattern:
+            pattern: xxxxxxx0
+            description: Get first or all occurrence(s)
+        - bitPattern:
+            pattern: xxxxxxx1
+            description: Get next occurrence(s) 

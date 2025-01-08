@@ -27,3 +27,14 @@ func TestApp_TS102221_V18(t *testing.T) {
 	// execute
 	app.Run()
 }
+
+func TestApp_GP_CardSpec_V2_3_1(t *testing.T) {
+	// arrange
+	app := app.NewApduInterpreterApp(app.ApduInterpreterConfiguration{
+		InputFile:  "../test_inputs/gp_cardspec_v2.3.1_log.txt",
+		SchemaPath: "../specifications/gp_cardspec_v2.3.1.yaml",
+	})
+
+	// execute
+	app.Run()
+}
