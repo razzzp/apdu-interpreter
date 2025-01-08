@@ -35,7 +35,7 @@ func (ie *InterpreterEngine) Interpret() []*ApduInterpretation {
 			// interpret command
 			cmdIntp, err := interpreter.CommandInterpreter.Interpret(apdu.Command)
 			if err != nil {
-				log.Printf("Error: reading interpreting command: %v", err)
+				log.Printf("Error: interpreting command: %v", err)
 			}
 			// doesn't match
 			if cmdIntp == nil {
@@ -55,7 +55,30 @@ func (ie *InterpreterEngine) Interpret() []*ApduInterpretation {
 				break
 			}
 			// interpret response TODO
-			// respIntp, err := interpreter.ResponseInterpreter.Interpret
+			if interpreter.ResponseInterpreter != nil && interpreter.ResponseInterpreter.Matches(apdu.Response) {
+				respIntp, err := interpreter.ResponseInterpreter.Interpret(apdu.Response)
+				if err != nil {
+					log.Printf("Error: interpreting response: %v", err)
+				}
+
+				cmdRspInterpretation.ResponseIntp = respIntp
+
+			}
+			if cmdRspInterpretation.ResponseIntp == nil {
+				// try common interpreters
+				for _, cIntpr := range ie.CommonResponseInterpreters {
+					if cIntpr.Matches(apdu.Response) {
+						respIntp, err := cIntpr.Interpret(apdu.Response)
+						if err != nil {
+							log.Printf("Error: interpreting response: %v", err)
+						}
+
+						cmdRspInterpretation.ResponseIntp = respIntp
+
+					}
+				}
+			}
+
 			break
 		}
 	}

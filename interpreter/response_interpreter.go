@@ -24,7 +24,9 @@ func (ri *responseInterpreter) Matches(response *apdu.ApduResponse) bool {
 }
 
 func (ri *responseInterpreter) Interpret(response *apdu.ApduResponse) (*ResponseInterpretation, error) {
-	result := &ResponseInterpretation{}
+	result := &ResponseInterpretation{
+		Intps: GenericInterpretations{},
+	}
 	result.Intps.Add(ri.ResponseDef.Description)
 	return result, nil
 }

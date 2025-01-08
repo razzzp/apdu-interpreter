@@ -34,6 +34,15 @@ type ApduResponse struct {
 	SW2  byte
 }
 
+func (ar *ApduResponse) AsBytes() []byte {
+	result := []byte{}
+	result = append(result, ar.Data...)
+	result = append(result, ar.SW1)
+	result = append(result, ar.SW2)
+
+	return result
+}
+
 type ApduCommandResponse struct {
 	Command  *ApduCommand
 	Response *ApduResponse

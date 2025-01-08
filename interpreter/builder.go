@@ -99,7 +99,9 @@ func (ib *InterpreterEngineBuilder) BuildCommandInterpreter(def *schema.CommandD
 }
 
 func (ib *InterpreterEngineBuilder) BuildResponseInterpreter(respDef *schema.ResponseDefinition) (*responseInterpreter, error) {
-	result := responseInterpreter{}
+	result := responseInterpreter{
+		ResponseDef: respDef,
+	}
 
 	sw1Intp, err := BytePattern(respDef.Sw1, "")
 	if err != nil {

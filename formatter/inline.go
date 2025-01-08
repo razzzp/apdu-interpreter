@@ -21,6 +21,18 @@ type Table struct {
 	Rows        []*Row
 }
 
+func (t *Table) DefaultColWidth() int {
+	return 10
+}
+
+func (t *Table) GetColWidth(colIdx int) int {
+	if len(t.Widths) > colIdx {
+		return int(t.Widths[colIdx])
+	} else {
+		return t.DefaultColWidth()
+	}
+}
+
 func (t *Table) SetValue(rowIdx int, colIdx int, val string) {
 	rowDiff := rowIdx - (len(t.Rows) - 1)
 	if rowDiff > 0 {
@@ -43,8 +55,8 @@ func (t *Table) SetValue(rowIdx int, colIdx int, val string) {
 func (t *Table) Print(writer io.StringWriter) {
 	for _, row := range t.Rows {
 		for i, col := range row.Columns {
-			// default width is 5 chars
-			colWidth := 5
+			// default width
+			colWidth := t.DefaultColWidth()
 			if i < len(t.Widths) {
 				colWidth = int(t.Widths[i])
 			}
@@ -95,7 +107,7 @@ func (tf *textInlineWriter) formatBytes(bytes []byte) string {
 	return hex.EncodeToString(bytes)
 }
 func (tf *textInlineWriter) generateTableByteIntps(label string, rowIdx int, bintp *interpreter.GenericInterpretations, table *Table) int {
-	if bintp == nil {
+	if bintp == nil || bintp.Count() == 0 {
 		return rowIdx
 	}
 	table.SetValue(rowIdx, 1, label)
@@ -133,14 +145,45 @@ func (tf *textInlineWriter) generateTableCommandBreakdown(rowIdx int, cmd *apdu.
 	return rowIdx
 }
 
+func (tf *textInlineWriter) generateTableResponse(rowIdx int, resp *apdu.ApduResponse, table *Table) int {
+	table.SetValue(rowIdx, 1, fmt.Sprintf("SW1: %s", byteAsHex(resp.SW1)))
+	rowIdx++
+	table.SetValue(rowIdx, 1, fmt.Sprintf("SW2: %s", byteAsHex(resp.SW2)))
+	rowIdx++
+	return rowIdx
+}
+
+func (tf *textInlineWriter) generateTableResponseIntp(rowIdx int, resp *interpreter.ResponseInterpretation, table *Table) int {
+	for _, intp := range resp.Intps.Intps {
+		table.SetValue(rowIdx, 1, fmt.Sprintf("%v", intp))
+		rowIdx++
+	}
+	return rowIdx
+}
+
+func (tf *textInlineWriter) generateTableBytesHex(rowIdx, colIdx int, bytes []byte, table *Table) int {
+	curCmdBytes := tf.formatBytes(bytes)
+	maxWidth := table.GetColWidth(colIdx)
+	cmdLines := len(curCmdBytes)/int(maxWidth) + 1
+	for i := 0; i < cmdLines; i++ {
+		endIdx := min(len(curCmdBytes), (i+1)*int(maxWidth))
+		curLine := curCmdBytes[i*int(maxWidth) : endIdx]
+		if i != 0 {
+			// indent following lines
+			curLine = "  " + curLine
+		}
+		table.SetValue(rowIdx+i, 0, curLine)
+	}
+	return rowIdx + cmdLines
+}
+
 func byteAsHex(b byte) string {
 	return hex.EncodeToString([]byte{b})[0:]
 }
 
 func (tf *textInlineWriter) generateTable(interpretations []*interpreter.ApduInterpretation) *Table {
-	cmdWidth := tf.Widths[0]
 	// intpWidth := tf.Widths[1]
-	result := &Table{
+	table := &Table{
 		Widths:      tf.Widths,
 		ColSepWidth: 3,
 	}
@@ -150,46 +193,44 @@ func (tf *textInlineWriter) generateTable(interpretations []*interpreter.ApduInt
 
 		// add column for cmd first
 		cmd := apduIntp.CommandResponse.Command
-		curCmdBytes := tf.formatBytes(cmd.AsBytes())
-		cmdLines := len(curCmdBytes)/int(cmdWidth) + 1
-		for i := 0; i < cmdLines; i++ {
-			endIdx := min(len(curCmdBytes), (i+1)*int(cmdWidth))
-			curLine := curCmdBytes[i*int(cmdWidth) : endIdx]
-			if i != 0 {
-				// indent following lines
-				curLine = "  " + curLine
-			}
-			result.SetValue(intpIdx+i, 0, curLine)
-		}
-		curRow := intpIdx
+		_ = tf.generateTableBytesHex(intpIdx, 0, cmd.AsBytes(), table)
 
+		curIntpRow := intpIdx
 		// add command breakdown
-		curRow = tf.generateTableCommandBreakdown(curRow, apduIntp.CommandResponse.Command, result)
+		curIntpRow = tf.generateTableCommandBreakdown(curIntpRow, apduIntp.CommandResponse.Command, table)
 
 		// no interpretation found
 		if len(apduIntp.Interpretations) == 0 {
 			// set unknown command and continue
-			result.SetValue(curRow, 1, "Unknown Command")
-			intpIdx = curRow + 1
-			continue
-		}
+			table.SetValue(curIntpRow, 1, "Unknown Command")
+			curIntpRow++
 
-		for _, intp := range apduIntp.Interpretations {
-			// add matching cmd desc
-			curRow = tf.generateTableInterpreter(curRow, intp.Interpreter, result)
-			// add interpretations
-			curRow = tf.generateTableByteIntps("CLA:", curRow, intp.CommandIntp.ClaIntp, result)
-			curRow = tf.generateTableByteIntps("INS:", curRow, intp.CommandIntp.InsIntp, result)
-			curRow = tf.generateTableByteIntps("P1:", curRow, intp.CommandIntp.P1Intp, result)
-			curRow = tf.generateTableByteIntps("P2:", curRow, intp.CommandIntp.P2Intp, result)
-			if cmd.P3 != nil {
-				_ = tf.generateTableByteIntps("P3:", curRow, intp.CommandIntp.P3Intp, result)
+		} else {
+			for _, intp := range apduIntp.Interpretations {
+				// add matching cmd desc
+				curIntpRow = tf.generateTableInterpreter(curIntpRow, intp.Interpreter, table)
+				// add interpretations
+				curIntpRow = tf.generateTableByteIntps("CLA:", curIntpRow, intp.CommandIntp.ClaIntp, table)
+				curIntpRow = tf.generateTableByteIntps("INS:", curIntpRow, intp.CommandIntp.InsIntp, table)
+				curIntpRow = tf.generateTableByteIntps("P1:", curIntpRow, intp.CommandIntp.P1Intp, table)
+				curIntpRow = tf.generateTableByteIntps("P2:", curIntpRow, intp.CommandIntp.P2Intp, table)
+				if cmd.P3 != nil {
+					_ = tf.generateTableByteIntps("P3:", curIntpRow, intp.CommandIntp.P3Intp, table)
+				}
+
+				// add response
+				resp := apduIntp.CommandResponse.Response
+				_ = tf.generateTableBytesHex(curIntpRow, 0, resp.AsBytes(), table)
+
+				// add response interpretation
+				curIntpRow = tf.generateTableResponse(curIntpRow, resp, table)
+				curIntpRow = tf.generateTableResponseIntp(curIntpRow, intp.ResponseIntp, table)
 			}
-
 		}
-		intpIdx = curRow
+
+		intpIdx = curIntpRow
 	}
-	return result
+	return table
 }
 
 func (tf *textInlineWriter) Write(interpretations []*interpreter.ApduInterpretation) {
