@@ -94,7 +94,7 @@ func (tf *textInlineWriter) formatBytes(bytes []byte) string {
 
 	return hex.EncodeToString(bytes)
 }
-func (tf *textInlineWriter) generateTableByteIntps(label string, rowIdx int, bintp *interpreter.ByteInterpretations, table *Table) int {
+func (tf *textInlineWriter) generateTableByteIntps(label string, rowIdx int, bintp *interpreter.GenericInterpretations, table *Table) int {
 	if bintp == nil {
 		return rowIdx
 	}

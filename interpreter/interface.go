@@ -14,19 +14,23 @@ type ByteInterpreter interface {
 	Interpret(i Interpretations, b byte) error
 }
 
+type ByteArrayInterpreter interface {
+	Interpret(i Interpretations, b []byte) error
+}
+
 type CommandInterpreter interface {
 	Matches(apdu *apdu.ApduCommand) bool
 	Interpret(apdu *apdu.ApduCommand) (*CommandInterpretation, error)
 }
 
-type ReponseInterpreter interface {
-	Matches(apdu *apdu.ApduCommand) bool
-	Interpret(apdu *apdu.ApduCommand) (*CommandInterpretation, error)
+type ResponseInterpreter interface {
+	Matches(response *apdu.ApduResponse) bool
+	Interpret(response *apdu.ApduResponse) (*ResponseInterpretation, error)
 }
 
 type ApduInterpreter struct {
 	SchemaDef           *schema.SchemaDefinition
 	CommandResponseDef  *schema.CommandResponseDefinition
 	CommandInterpreter  CommandInterpreter
-	ResponseInterpreter ReponseInterpreter
+	ResponseInterpreter ResponseInterpreter
 }

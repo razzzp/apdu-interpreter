@@ -2,18 +2,18 @@ package interpreter
 
 import "github.com/razzzp/apdu-interpreter/apdu"
 
-type ByteInterpretations struct {
+type GenericInterpretations struct {
 	Intps []any
 }
 
-func (bi *ByteInterpretations) Count() int {
+func (bi *GenericInterpretations) Count() int {
 	return len(bi.Intps)
 }
 
 type DataInterpretations struct {
 }
 
-func (bi *ByteInterpretations) Add(intp any) {
+func (bi *GenericInterpretations) Add(intp any) {
 	bi.Intps = append(bi.Intps, intp)
 }
 
@@ -29,24 +29,24 @@ type CommandResponseInterpretation struct {
 }
 
 type CommandInterpretation struct {
-	ClaIntp  *ByteInterpretations
-	InsIntp  *ByteInterpretations
-	P1Intp   *ByteInterpretations
-	P2Intp   *ByteInterpretations
-	P3Intp   *ByteInterpretations
+	ClaIntp  *GenericInterpretations
+	InsIntp  *GenericInterpretations
+	P1Intp   *GenericInterpretations
+	P2Intp   *GenericInterpretations
+	P3Intp   *GenericInterpretations
 	DataIntp *DataInterpretations
 }
 
 func NewCommandInterpretation() CommandInterpretation {
 	return CommandInterpretation{
-		ClaIntp: &ByteInterpretations{},
-		InsIntp: &ByteInterpretations{},
-		P1Intp:  &ByteInterpretations{},
-		P2Intp:  &ByteInterpretations{},
-		P3Intp:  &ByteInterpretations{},
+		ClaIntp: &GenericInterpretations{},
+		InsIntp: &GenericInterpretations{},
+		P1Intp:  &GenericInterpretations{},
+		P2Intp:  &GenericInterpretations{},
+		P3Intp:  &GenericInterpretations{},
 	}
 }
 
 type ResponseInterpretation struct {
-	// TODO
+	Intps GenericInterpretations
 }

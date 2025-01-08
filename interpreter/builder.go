@@ -1,6 +1,7 @@
 package interpreter
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/razzzp/apdu-interpreter/schema"
@@ -97,6 +98,25 @@ func (ib *InterpreterEngineBuilder) BuildCommandInterpreter(def *schema.CommandD
 	return &apduIntp, nil
 }
 
+func (ib *InterpreterEngineBuilder) BuildResponseInterpreter(respDef *schema.ResponseDefinition) (*responseInterpreter, error) {
+	result := responseInterpreter{}
+
+	sw1Intp, err := BytePattern(respDef.Sw1, "")
+	if err != nil {
+		return nil, fmt.Errorf("failed building sw1:  %v", err)
+	}
+
+	sw2Intp, err := BytePattern(respDef.Sw2, "")
+	if err != nil {
+		return nil, fmt.Errorf("failed building sw2: %v", err)
+	}
+
+	result.Sw1 = sw1Intp
+	result.Sw2 = sw2Intp
+
+	return &result, nil
+}
+
 func (ib *InterpreterEngineBuilder) BuildSchema(schemaDef *schema.SchemaDefinition) *InterpreterEngine {
 	if ib.result == nil {
 		ib.result = &InterpreterEngine{
@@ -104,8 +124,21 @@ func (ib *InterpreterEngineBuilder) BuildSchema(schemaDef *schema.SchemaDefiniti
 		}
 	}
 
+	// append current schema
 	ib.result.Schemas = append(ib.result.Schemas, schemaDef)
 
+	// build common response intps
+	for _, commonRespDef := range schemaDef.Common.Responses {
+		respIntp, err := ib.BuildResponseInterpreter(&commonRespDef)
+		if err != nil {
+			log.Printf("[Error] Failed to response interpreter for command spec `%s`: %v", commonRespDef.Description, err)
+			continue
+		}
+
+		ib.result.CommonResponseInterpreters = append(ib.result.CommonResponseInterpreters, respIntp)
+	}
+
+	// build command interpreters
 	for _, specDef := range schemaDef.Spec {
 		commandIntp, err := ib.BuildCommandInterpreter(&specDef.Command)
 		if err != nil {

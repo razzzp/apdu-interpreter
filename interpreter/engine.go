@@ -8,9 +8,10 @@ import (
 )
 
 type InterpreterEngine struct {
-	Schemas          []*schema.SchemaDefinition
-	ApduInterpreters []*ApduInterpreter
-	Parser           apdu.ApduParser
+	Schemas                    []*schema.SchemaDefinition
+	ApduInterpreters           []*ApduInterpreter
+	CommonResponseInterpreters []ResponseInterpreter
+	Parser                     apdu.ApduParser
 }
 
 func (ie *InterpreterEngine) Interpret() []*ApduInterpretation {
