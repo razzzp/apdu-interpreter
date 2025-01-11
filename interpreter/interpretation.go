@@ -11,6 +11,12 @@ func (bi *GenericInterpretations) Count() int {
 }
 
 type DataInterpretations struct {
+	DataInterpreter DataInterpreter
+	Intps           []any
+}
+
+func (di *DataInterpretations) Add(intp any) {
+	di.Intps = append(di.Intps, intp)
 }
 
 func (bi *GenericInterpretations) Add(intp any) {

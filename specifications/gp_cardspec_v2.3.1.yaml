@@ -120,3 +120,52 @@ spec:
         - bitPattern:
             pattern: xxxxxxx1
             description: Get next occurrence(s) 
+  - name: INSTALL
+    description: Delete a uniquely identifiable object 
+    command:
+      cla:
+        - bytePatterns:
+            patterns:
+              - "8X"
+              - "CX"
+              - "EX"
+      ins:
+        - bytePattern:
+            pattern: "E6"
+      p1:
+        - bitPattern:
+            pattern: 1xxxxxxx
+            description:  Last (or only command)
+        - bitPattern:
+            pattern: 0xxxxxxx
+            description:  More INSTALL commands
+        - bitPattern:
+            pattern: x1000000
+            description: For registry update
+        - bitPattern:
+            pattern: x0100000
+            description: For personalization 
+        - bitPattern:
+            pattern: x0010000
+            description: For extradition
+        - bitPattern:
+            pattern: x0001xx0
+            description: For make selectable
+        - bitPattern:
+            pattern: x000x1x0
+            description: For install
+        - bitPattern:
+            pattern: x000xx10
+            description: For load
+      p2:
+        - bytePattern:
+            pattern: "00"
+            description: No information is provided
+        - bytePattern:
+            pattern: "01"
+            description: Beginning of the combined Load, Install and Make Selectable process
+        - bytePattern:
+            pattern: "03"
+            description: End of the combined Load, Install and Make Selectable process
+      data:
+        - 

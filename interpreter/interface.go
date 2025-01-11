@@ -15,7 +15,7 @@ type ByteInterpreter interface {
 }
 
 type ByteArrayInterpreter interface {
-	Interpret(i Interpretations, b []byte) error
+	Interpret(i Interpretations, b []byte, startIdx int) (int, error)
 }
 
 type CommandInterpreter interface {
@@ -26,6 +26,11 @@ type CommandInterpreter interface {
 type ResponseInterpreter interface {
 	Matches(response *apdu.ApduResponse) bool
 	Interpret(response *apdu.ApduResponse) (*ResponseInterpretation, error)
+}
+
+type DataInterpreter interface {
+	Matches(response *apdu.ApduCommand) bool
+	Interpret(apdu *apdu.ApduCommand) (*DataInterpretations, error)
 }
 
 type ApduInterpreter struct {
