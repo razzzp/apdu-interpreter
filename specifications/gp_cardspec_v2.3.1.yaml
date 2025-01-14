@@ -169,9 +169,12 @@ spec:
             description: End of the combined Load, Install and Make Selectable process
       data:
         - when:
-            p1:
-              - bitPattern:
-                  pattern: x000xx10
-                  description: For load
-          interpreters:
-            
+            label: For load Data
+            criteria:
+              p1:
+                - bitPattern:
+                    pattern: x000xx10
+                    description: For load
+            interpreters:
+              - lengthValue: 
+                  label: "Load File AID"
