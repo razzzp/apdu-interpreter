@@ -168,4 +168,10 @@ spec:
             pattern: "03"
             description: End of the combined Load, Install and Make Selectable process
       data:
-        - 
+        - when:
+            p1:
+              - bitPattern:
+                  pattern: x000xx10
+                  description: For load
+          interpreters:
+            

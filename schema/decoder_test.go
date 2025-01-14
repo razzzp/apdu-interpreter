@@ -49,3 +49,48 @@ spec:
 
 	t.Logf("result: %+v\n", schema)
 }
+
+func TestDecode_DataFields_ReturnSchema(t *testing.T) {
+	// arrange
+	input := `name: Test
+group: Test Group
+version: v0.1
+description: Test Description
+labels:
+  - Label1
+  - Label2
+spec:
+  - name: Cmd
+    description: Test 
+    command:  
+      data:
+        - when:
+            label: First when
+            criteria:
+              p1:
+                - bytePattern:
+                    pattern: "0X"
+            interpreters:
+              - lengthValue:
+                  label: Length Value Label
+`
+	reader := strings.NewReader(input)
+	decoder := schema.NewYamlSchemaDecoder(reader)
+
+	//act
+	schema, err := decoder.Decode()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//assert
+	assert.Len(t, schema.Spec[0].Command.Data, 1)
+	assert.NotNil(t, schema.Spec[0].Command.Data[0].When)
+	assert.Equal(t, "First when", schema.Spec[0].Command.Data[0].When.Label)
+	assert.Len(t, schema.Spec[0].Command.Data[0].When.Criteria.P1, 1)
+	assert.Equal(t, "0X", schema.Spec[0].Command.Data[0].When.Criteria.P1[0].BytePattern.Pattern)
+	assert.Len(t, schema.Spec[0].Command.Data[0].When.Interpreters, 1)
+	assert.Equal(t, "Length Value Label", schema.Spec[0].Command.Data[0].When.Interpreters[0].LengthValue.Label)
+
+	t.Logf("result: %+v\n", schema)
+}

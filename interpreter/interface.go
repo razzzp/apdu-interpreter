@@ -29,7 +29,6 @@ type ResponseInterpreter interface {
 }
 
 type DataInterpreter interface {
-	Matches(response *apdu.ApduCommand) bool
 	Interpret(apdu *apdu.ApduCommand) (*DataInterpretations, error)
 }
 

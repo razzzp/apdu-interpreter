@@ -6,7 +6,7 @@ type CommandDefinition struct {
 	P1   []ByteDefinition
 	P2   []ByteDefinition
 	P3   []ByteDefinition
-	Data string
+	Data []DataDefinition
 	Le   string
 }
 
@@ -64,4 +64,29 @@ type SchemaDefinition struct {
 
 type CommonDefinitions struct {
 	Responses []ResponseDefinition
+}
+
+type DataDefinition struct {
+	When *GroupDefinition
+}
+
+type CriteriaDefinition struct {
+	Cla []ByteDefinition
+	Ins []ByteDefinition
+	P1  []ByteDefinition
+	P2  []ByteDefinition
+}
+
+type GroupDefinition struct {
+	Label        string
+	Criteria     CriteriaDefinition
+	Interpreters []ByteArrayDefinition
+}
+
+type ByteArrayDefinition struct {
+	LengthValue *LengthValueDefinition `yaml:"lengthValue"`
+}
+
+type LengthValueDefinition struct {
+	Label string
 }
