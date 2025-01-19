@@ -65,6 +65,22 @@ func buildByteIntpsToList(
 	return nil
 }
 
+func (ib *InterpreterEngineBuilder) BuildDataInterpreters(def *schema.CommandDefinition, interpreter *commandInterpreter) {
+	for _, dataDef := range def.Data {
+		dIntp := dataInterpreter{}
+		if dataDef.When != nil {
+			// build data interpreter with criteria
+			if dataDef.When.Criteria != nil {
+				list := []ByteInterpreter{}
+				buildByteIntpsToList(dataDef.When.Criteria.Cla, &list)
+			}
+			for _, bytesArrDef := range dataDef.When.Interpreters {
+				// build byte array interpreter
+			}
+		}
+	}
+}
+
 func (ib *InterpreterEngineBuilder) BuildCommandInterpreter(def *schema.CommandDefinition) (*commandInterpreter, error) {
 	apduIntp := commandInterpreter{}
 
